@@ -78,6 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <AllProjectIncludesArePublic>false</AllProjectIncludesArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,8 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aoe2scenario.cpp" />
     <ClCompile Include="AoE2TriggerCraftConsole.cpp" />
     <ClCompile Include="em_inflate\em_inflate.c" />
+    <ClCompile Include="file_types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aoe2scenario.h" />

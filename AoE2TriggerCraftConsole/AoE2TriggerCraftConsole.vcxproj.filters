@@ -21,6 +21,12 @@
     <ClCompile Include="em_inflate\em_inflate.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="aoe2scenario.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="file_types.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="em_inflate\em_inflate.h">
