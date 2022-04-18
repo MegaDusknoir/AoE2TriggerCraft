@@ -3,6 +3,7 @@
 
 namespace AoE2ScenarioNamespace
 {
+    constexpr char current_version[] = "1.41";
     void AoE2Scenario::open_file(ifstream& fin)
     {
         stringstream ssin;

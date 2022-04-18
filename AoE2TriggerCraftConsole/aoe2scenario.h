@@ -14,7 +14,6 @@ namespace AoE2ScenarioNamespace
     using namespace AoE2ScenarioFileTypesNamespace;
     using namespace AoE2Scenario_1_41_Namespace;
     using AoE2ScenarioCurrent = AoE2Scenario_1_41;
-    constexpr char current_version[] = "1.41";
 
     class AoE2Scenario
     {
