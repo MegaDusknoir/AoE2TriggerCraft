@@ -18,18 +18,7 @@ namespace AoE2ScenarioNamespace
     class AoE2Scenario
     {
     public:
-        AoE2Scenario(const char* file_path)
-        {
-            ifstream fin(file_path, ios::binary);
-            open_file(fin);
-            fin.close();
-        }
-        AoE2Scenario(ifstream& fin)
-        {
-            open_file(fin);
-        }
-    private:
-        void open_file(ifstream& fin);
+        AoE2Scenario(const char* file_path);
 
     private:
         AoE2ScenarioCurrent scen;
