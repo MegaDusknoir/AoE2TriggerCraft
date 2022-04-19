@@ -8,6 +8,8 @@ namespace AoE2ScenarioFileTypesNamespace
 {
 	using std::string;
 	using std::stringstream;
+	using std::fstream;
+	using std::ofstream;
 	using std::ifstream;
 	using std::ios;
 	using std::size_t;

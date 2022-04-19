@@ -13,33 +13,50 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\Util">
+      <UniqueIdentifier>{b3f4e6a1-7009-48c0-b605-cc838475a0c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Util">
+      <UniqueIdentifier>{4e6114c3-4a42-4e4d-8714-aab34003a73c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AoE2TriggerCraftConsole.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="em_inflate\em_inflate.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="aoe2scenario.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="file_types.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="util\utilio.cpp">
+      <Filter>源文件\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\file_types.cpp">
+      <Filter>源文件\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="em_inflate\em_inflate.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="aoe2scenario.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="aoe2scenario_1_41.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="file_types.h">
+    <ClInclude Include="aoe2scenario_1_45.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="util\utilio.h">
+      <Filter>头文件\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\file_types.h">
+      <Filter>头文件\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\libdeflate\libdeflate.h">
+      <Filter>头文件\Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="util\libdeflate\libdeflatestatic.lib">
+      <Filter>源文件\Util</Filter>
+    </Library>
   </ItemGroup>
 </Project>

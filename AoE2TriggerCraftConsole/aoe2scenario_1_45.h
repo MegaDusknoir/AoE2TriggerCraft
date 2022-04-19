@@ -1,10 +1,10 @@
 #pragma once
 #include "util/file_types.h"
 
-namespace AoE2Scenario_1_41_Namespace
+namespace AoE2Scenario_1_45_Namespace
 {
     using namespace AoE2ScenarioFileTypesNamespace;
-    class AoE2Scenario_1_41
+    class AoE2Scenario_1_45
     {
         class FileHeader
         {
@@ -311,12 +311,18 @@ namespace AoE2Scenario_1_41_Namespace
                 str16 map_color_mood;
                 byte<2> separator_3;
                 str16 script_name;
-                uint8_t block_humanity_team_change;
                 uint8_t collide_and_correct;
                 uint8_t villager_force_drop;
                 byte<128> unknown;
-                int32_t player_1_camera_y;
-                int32_t player_1_camera_x;
+
+                uint8_t lock_coop_alliances;
+                int32_t ai_map_type;
+                uint32_t per_player_population_cap[16];
+                uint32_t secondary_game_mode;
+                byte<4> unknown_3;
+                byte<4> unknown_4;
+                //int32_t player_1_camera_y;
+                //int32_t player_1_camera_x;
                 int8_t no_waves_on_shore;
                 int32_t map_width;
                 int32_t map_height;
@@ -343,12 +349,15 @@ namespace AoE2Scenario_1_41_Namespace
                     map_color_mood.read(p_bin);
                     data_read(separator_3, p_bin);
                     script_name.read(p_bin);
-                    data_read(block_humanity_team_change, p_bin);
                     data_read(collide_and_correct, p_bin);
                     data_read(villager_force_drop, p_bin);
                     data_read(unknown, p_bin);
-                    data_read(player_1_camera_y, p_bin);
-                    data_read(player_1_camera_x, p_bin);
+                    data_read(lock_coop_alliances, p_bin);
+                    data_read(ai_map_type, p_bin);
+                    data_read(per_player_population_cap, p_bin);
+                    data_read(secondary_game_mode, p_bin);
+                    data_read(unknown_3, p_bin);
+                    data_read(unknown_4, p_bin);
                     data_read(no_waves_on_shore, p_bin);
                     data_read(map_width, p_bin);
                     data_read(map_height, p_bin);
@@ -533,6 +542,10 @@ namespace AoE2Scenario_1_41_Namespace
                         int32_t play_sound;
                         int32_t player_color;
                         int32_t unknown_4;
+                        int32_t color_mood;
+                        int32_t reset_timer;
+                        int32_t object_state;
+                        int32_t action_type;
                         str32 message;
                         str32 sound_name;
                         vector<int32_t> selected_object_ids;
@@ -588,6 +601,10 @@ namespace AoE2Scenario_1_41_Namespace
                             data_read(play_sound, p_bin);
                             data_read(player_color, p_bin);
                             data_read(unknown_4, p_bin);
+                            data_read(color_mood, p_bin);
+                            data_read(reset_timer, p_bin);
+                            data_read(object_state, p_bin);
+                            data_read(action_type, p_bin);
                             message.read(p_bin);
                             sound_name.read(p_bin);
                             vector_cst(selected_object_ids, p_bin, number_of_units_selected > 0 ? number_of_units_selected : 0);
@@ -623,6 +640,7 @@ namespace AoE2Scenario_1_41_Namespace
                         int32_t target_player;
                         int32_t unit_ai_action;
                         int32_t unknown_4;
+                        int32_t object_state;
                         str32 xs_function;
                         void read(const char*& p_bin)
                         {
@@ -651,6 +669,7 @@ namespace AoE2Scenario_1_41_Namespace
                             data_read(target_player, p_bin);
                             data_read(unit_ai_action, p_bin);
                             data_read(unknown_4, p_bin);
+                            data_read(object_state, p_bin);
                             xs_function.read(p_bin);
                         }
                     };

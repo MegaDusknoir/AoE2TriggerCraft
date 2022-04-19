@@ -3,55 +3,58 @@
 
 namespace AoE2ScenarioNamespace
 {
-    constexpr char current_version[] = "1.41";
+    DeflateClass AoE2Scenario::deflate;
+    AoE2Scenario::~AoE2Scenario()
+    {
+    }
     AoE2Scenario::AoE2Scenario(const char* file_path)
     {
-        ifstream fin(file_path, ios::binary);
-        if (fin.fail() == true)
-        {
-            throw;
-        }
+        AutoFile fin(file_path, ios::in | ios::binary);
         string check_version(4, 0);
-        fin.read(reinterpret_cast<char *>(&check_version[0]), 4);
+        fin->read(reinterpret_cast<char *>(&check_version[0]), 4);
         if (check_version == string(current_version))
         {
-            fin.seekg(0, ios::end);
-            auto file_size = static_cast<size_t>(fin.tellg());
-            fin.seekg(ios::beg);
-            string raw_binary(file_size, 0);
-            fin.read(reinterpret_cast<char *>(&raw_binary[0]), file_size);
-            fin.close();
 #ifndef NDEBUG
             auto t1 = clock();
 #endif
-            auto header_length = scen.Header.read(raw_binary.data());
-            string MapData = raw_binary.substr(header_length);
-            Decompress(MapData);
+            fin->seekg(0, ios::end);
+            auto file_size = static_cast<size_t>(fin->tellg());
+            fin->seekg(ios::beg);
+            string raw_binary(file_size, 0);
+            fin->read(reinterpret_cast<char *>(&raw_binary[0]), file_size);
+            fin->close();
+            auto header_length = scen.header.read(raw_binary.data());
+            string scen_body = raw_binary.substr(header_length);
+            deflate_decompress(scen_body);
+            auto raw_else(scen_body.substr(scen.body.read(scen_body.data())));
 #ifndef NDEBUG
-            auto raw_else(MapData.substr(scen.Data.read(MapData.data())));
             auto t2 = clock();
             std::cout << "Read completed in " << (double)(t2 - t1) / CLOCKS_PER_SEC << "ms" << std::endl;
 #endif
         }
         else if (check_version == string("1.41"))
         {
-            fin.close();
+            //Transform 1.41 to newest format.
         }
         else
         {
-            fin.close();
 #ifndef NDEBUG
             std::cout << "Version " << check_version << " not supported yet." << std::endl;
 #endif
         }
     }
-    void AoE2Scenario::Decompress(string& raw)
+    void AoE2Scenario::deflate_decompress(string& raw)
     {
-        uint8_t* out = new uint8_t[raw.size() * 128];
-        auto out_size = em_inflate(raw.data(), raw.size(), out, _UI32_MAX);
-        string decompressed;
-        decompressed.append((char*)out, out_size);
-        delete[] out;
-        raw = std::move(decompressed);
+        string out(raw.size() * 128, '\0');
+        size_t out_size = deflate.decompress(raw.data(), raw.size(), static_cast<void *>(&out[0]), out.size());
+        out.resize(out_size);
+        raw = std::move(out);
+    }
+    void AoE2Scenario::deflate_compress(string& raw)
+    {
+        string out(raw.size() * 32, '\0');
+        size_t out_size = deflate.compress(raw.data(), raw.size(), static_cast<void*>(&out[0]), out.size());
+        out.resize(out_size);
+        raw = std::move(out);
     }
 }

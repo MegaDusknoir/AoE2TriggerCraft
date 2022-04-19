@@ -142,14 +142,19 @@
   <ItemGroup>
     <ClCompile Include="aoe2scenario.cpp" />
     <ClCompile Include="AoE2TriggerCraftConsole.cpp" />
-    <ClCompile Include="em_inflate\em_inflate.c" />
-    <ClCompile Include="file_types.cpp" />
+    <ClCompile Include="util\file_types.cpp" />
+    <ClCompile Include="util\utilio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aoe2scenario.h" />
     <ClInclude Include="aoe2scenario_1_41.h" />
-    <ClInclude Include="em_inflate\em_inflate.h" />
-    <ClInclude Include="file_types.h" />
+    <ClInclude Include="aoe2scenario_1_45.h" />
+    <ClInclude Include="util\file_types.h" />
+    <ClInclude Include="util\libdeflate\libdeflate.h" />
+    <ClInclude Include="util\utilio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="util\libdeflate\libdeflatestatic.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

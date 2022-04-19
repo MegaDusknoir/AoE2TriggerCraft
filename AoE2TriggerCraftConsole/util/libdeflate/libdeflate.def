@@ -1,0 +1,20 @@
+EXPORTS
+    libdeflate_adler32 @1
+    libdeflate_alloc_compressor @2
+    libdeflate_alloc_decompressor @3
+    libdeflate_crc32 @4
+    libdeflate_deflate_compress @5
+    libdeflate_deflate_compress_bound @6
+    libdeflate_deflate_decompress @7
+    libdeflate_deflate_decompress_ex @8
+    libdeflate_free_compressor @9
+    libdeflate_free_decompressor @10
+    libdeflate_gzip_compress @11
+    libdeflate_gzip_compress_bound @12
+    libdeflate_gzip_decompress @13
+    libdeflate_gzip_decompress_ex @14
+    libdeflate_set_memory_allocator @15
+    libdeflate_zlib_compress @16
+    libdeflate_zlib_compress_bound @17
+    libdeflate_zlib_decompress @18
+    libdeflate_zlib_decompress_ex @19
