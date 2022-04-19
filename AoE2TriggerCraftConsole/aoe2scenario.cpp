@@ -43,6 +43,32 @@ namespace AoE2ScenarioNamespace
 #endif
         }
     }
+    void AoE2Scenario::open(const char* file_path)
+    {
+        //Todo
+    }
+
+    void AoE2Scenario::save(const char* file_path)
+    {
+#ifndef NDEBUG
+        auto t1 = clock();
+#endif
+        string shead(1 * 1024 * 1024, '\0');
+        string sbody(16 * 1024 * 1024, '\0');
+        shead.resize(scen.header.write(&shead[0]));
+        sbody.resize(scen.body.write(&sbody[0]));
+        scen.body.read(sbody.data());
+        deflate_compress(sbody);
+		AutoFile fout(file_path, ios::out | ios::binary);
+        fout->write(shead.data(), shead.size());
+        fout->write(sbody.data(), sbody.size());
+        fout->close();
+#ifndef NDEBUG
+		auto t2 = clock();
+		std::cout << "Write completed in " << (double)(t2 - t1) / CLOCKS_PER_SEC << "ms" << std::endl;
+#endif
+    }
+
     void AoE2Scenario::deflate_decompress(string& raw)
     {
         string out(raw.size() * 128, '\0');

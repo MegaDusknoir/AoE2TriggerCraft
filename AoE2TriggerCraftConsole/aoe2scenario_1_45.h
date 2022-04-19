@@ -26,6 +26,23 @@ namespace AoE2Scenario_1_45_Namespace
                 data_read(trigger_count, p_bin);
                 return p_bin - raw_bin;
             }
+            size_t write(char* dst_bin) const
+            {
+                auto p_bin = dst_bin;
+                data_write(version, p_bin);
+                data_write(header_length, p_bin);
+                data_write(savable, p_bin);
+                data_write(timestamp_of_last_save, p_bin);
+                data_write(scenario_instructions, p_bin);
+                data_write(player_count, p_bin);
+                data_write(unknown_value, p_bin);
+                data_write(unknown_value_2, p_bin);
+                data_write(amount_of_unknown_numbers, p_bin);
+                data_write(unknown_numbers, p_bin);
+                data_write(creator_name, p_bin);
+                data_write(trigger_count, p_bin);
+                return p_bin - dst_bin;
+            }
         public:
         private:
             char version[4];
@@ -62,6 +79,23 @@ namespace AoE2Scenario_1_45_Namespace
                 Files.read(p_bin);
                 return p_bin - raw_bin;
             }
+            size_t write(char* dst_bin) const
+            {
+                auto p_bin = dst_bin;
+                DataHeader.write(p_bin);
+                Messages.write(p_bin);
+                Cinematics.write(p_bin);
+                BackgroundImage.write(p_bin);
+                PlayerDataTwo.write(p_bin);
+                data_write(GlobalVictory, p_bin);
+                Diplomacy.write(p_bin);
+                Options.write(p_bin);
+                Map.write(p_bin);
+                Units.write(p_bin);
+                Triggers.write(p_bin);
+                Files.write(p_bin);
+                return p_bin - dst_bin;
+            }
         public:
             /* Data Header */
             struct DataHeaderStruct
@@ -92,6 +126,17 @@ namespace AoE2Scenario_1_45_Namespace
                     data_read(unknown, p_bin);
                     filename.read(p_bin);
                 }
+                void write(char*& p_bin) const
+                {
+                    data_write(next_unit_id_to_place, p_bin);
+                    data_write(version, p_bin);
+                    data_write(tribe_names, p_bin);
+                    data_write(string_table_player_names, p_bin);
+                    data_write(player_data_1, p_bin);
+                    data_write(per_player_lock_civilization, p_bin);
+                    data_write(unknown, p_bin);
+                    data_write(filename, p_bin);
+                }
             } DataHeader;
             /* Messages */
             struct MessagesStruct
@@ -106,6 +151,14 @@ namespace AoE2Scenario_1_45_Namespace
                         ascii_messages[i].read(p_bin);
                     }
                 }
+                void write(char*& p_bin) const
+                {
+                    data_write(string_tables, p_bin);
+                    for (size_t i = 0; i < 6; ++i)
+                    {
+                        ascii_messages[i].write(p_bin);
+                    }
+                }
             } Messages;
             /* Cinematics */
             struct CinematicsStruct
@@ -115,9 +168,15 @@ namespace AoE2Scenario_1_45_Namespace
                 str16 LossCinemaFilename;
                 void read(const char*& p_bin)
                 {
-                    PregameCinemaFilename.read(p_bin);
-                    VictoryCinemaFilename.read(p_bin);
-                    LossCinemaFilename.read(p_bin);
+                    data_read(PregameCinemaFilename, p_bin);
+                    data_read(VictoryCinemaFilename, p_bin);
+                    data_read(LossCinemaFilename, p_bin);
+                }
+                void write(char*& p_bin) const
+                {
+                    data_write(PregameCinemaFilename, p_bin);
+                    data_write(VictoryCinemaFilename, p_bin);
+                    data_write(LossCinemaFilename, p_bin);
                 }
             } Cinematics;
             /* Background Image */
@@ -154,8 +213,24 @@ namespace AoE2Scenario_1_45_Namespace
                         vector_cst(colors_used, p_bin, number_of_colors_used);
                         vector_cst(image, p_bin, width * height);
                     }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(size, p_bin);
+                        data_write(width, p_bin);
+                        data_write(height, p_bin);
+                        data_write(planes, p_bin);
+                        data_write(bit_count, p_bin);
+                        data_write(compression, p_bin);
+                        data_write(image_size, p_bin);
+                        data_write(x_pels, p_bin);
+                        data_write(y_pels, p_bin);
+                        data_write(number_of_colors_used, p_bin);
+                        data_write(important_colors, p_bin);
+                        data_write(colors_used, p_bin);
+                        data_write(image, p_bin);
+                    }
                 };
-                str16 Filename;
+                str16 filename;
                 uint32_t picture_version;
                 uint32_t bitmap_width;
                 uint32_t bitmap_height;
@@ -163,12 +238,21 @@ namespace AoE2Scenario_1_45_Namespace
                 vector<BitMapInfoStruct> bitmap_info;
                 void read(const char*& p_bin)
                 {
-                    Filename.read(p_bin);
+                    data_read(filename, p_bin);
                     data_read(picture_version, p_bin);
                     data_read(bitmap_width, p_bin);
                     data_read(bitmap_height, p_bin);
                     data_read(picture_orientation, p_bin);
                     vector_cst(bitmap_info, p_bin, bitmap_width * bitmap_height ? 1 : 0);
+                }
+                void write(char*& p_bin) const
+                {
+                    data_write(filename, p_bin);
+                    data_write(picture_version, p_bin);
+                    data_write(bitmap_width, p_bin);
+                    data_write(bitmap_height, p_bin);
+                    data_write(picture_orientation, p_bin);
+                    data_write(bitmap_info, p_bin);
                 }
             } BackgroundImage;
             /* PlayerDataTwo */
@@ -183,7 +267,12 @@ namespace AoE2Scenario_1_45_Namespace
                     void read(const char*& p_bin)
                     {
                         data_read(unknown, p_bin);
-                        ai_per_file_text.read(p_bin);
+                        data_read(ai_per_file_text, p_bin);
+                    }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(unknown, p_bin);
+                        data_write(ai_per_file_text, p_bin);
                     }
                 } ai_files[MAX_PLAYER_COUNT];
                 uint8_t ai_type[16];
@@ -215,6 +304,24 @@ namespace AoE2Scenario_1_45_Namespace
                     data_read(ai_type, p_bin);
                     data_read(separator, p_bin);
                     data_read(resources, p_bin);
+                }
+                void write(char*& p_bin) const
+                {
+                    for (size_t i = 0; i < 32; ++i)
+                    {
+                        strings[i].write(p_bin);
+                    }
+                    for (size_t i = 0; i < MAX_PLAYER_COUNT; ++i)
+                    {
+                        ai_names[i].write(p_bin);
+                    }
+                    for (size_t i = 0; i < MAX_PLAYER_COUNT; ++i)
+                    {
+                        ai_files[i].write(p_bin);
+                    }
+                    data_write(ai_type, p_bin);
+                    data_write(separator, p_bin);
+                    data_write(resources, p_bin);
                 }
             } PlayerDataTwo;
             /* Global Victory */
@@ -256,6 +363,17 @@ namespace AoE2Scenario_1_45_Namespace
                     data_read(allow_players_choose_teams, p_bin);
                     data_read(random_start_points, p_bin);
                     data_read(max_number_of_teams, p_bin);
+                }
+                void write(char*& p_bin) const
+                {
+                    data_write(per_player_diplomacy, p_bin);
+                    data_write(individual_victories, p_bin);
+                    data_write(separator, p_bin);
+                    data_write(per_player_allied_victory, p_bin);
+                    data_write(lock_teams, p_bin);
+                    data_write(allow_players_choose_teams, p_bin);
+                    data_write(random_start_points, p_bin);
+                    data_write(max_number_of_teams, p_bin);
                 }
             } Diplomacy;
             /* Options */
@@ -301,6 +419,32 @@ namespace AoE2Scenario_1_45_Namespace
                     data_read(unknown_2, p_bin);
                     data_read(number_of_triggers, p_bin);
                 }
+                void write(char*& p_bin) const
+                {
+                    data_write(per_player_number_of_disabled_techs, p_bin);
+                    for (size_t i = 0; i < 8; ++i)
+                    {
+                        data_write(disabled_tech_ids_player[i], p_bin);
+                    }
+                    data_write(per_player_number_of_disabled_units, p_bin);
+                    for (size_t i = 0; i < 8; ++i)
+                    {
+                        data_write(disabled_unit_ids_player[i], p_bin);
+                    }
+                    data_write(per_player_number_of_disabled_buildings, p_bin);
+                    for (size_t i = 0; i < 8; ++i)
+                    {
+                        data_write(disabled_building_ids_player[i], p_bin);
+                    }
+                    data_write(combat_mode, p_bin);
+                    data_write(naval_mode, p_bin);
+                    data_write(all_techs, p_bin);
+                    data_write(per_player_starting_age, p_bin);
+                    data_write(unknown_1, p_bin);
+                    data_write(per_player_base_priority, p_bin);
+                    data_write(unknown_2, p_bin);
+                    data_write(number_of_triggers, p_bin);
+                }
             } Options;
             /* Map */
             struct MapStruct
@@ -314,7 +458,6 @@ namespace AoE2Scenario_1_45_Namespace
                 uint8_t collide_and_correct;
                 uint8_t villager_force_drop;
                 byte<128> unknown;
-
                 uint8_t lock_coop_alliances;
                 int32_t ai_map_type;
                 uint32_t per_player_population_cap[16];
@@ -339,6 +482,13 @@ namespace AoE2Scenario_1_45_Namespace
                         data_read(unused, p_bin);
                         data_read(layer, p_bin);
                     }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(terrain_id, p_bin);
+                        data_write(elevation, p_bin);
+                        data_write(unused, p_bin);
+                        data_write(layer, p_bin);
+                    }
                 };
                 vector<TerrainStruct> terrain_data;
                 void read(const char*& p_bin)
@@ -362,6 +512,28 @@ namespace AoE2Scenario_1_45_Namespace
                     data_read(map_width, p_bin);
                     data_read(map_height, p_bin);
                     vector_cst(terrain_data, p_bin, map_width * map_height);
+                }
+                void write(char*& p_bin) const
+                {
+                    data_write(separator_1, p_bin);
+                    data_write(water_definition, p_bin);
+                    data_write(separator_2, p_bin);
+                    data_write(map_color_mood, p_bin);
+                    data_write(separator_3, p_bin);
+                    data_write(script_name, p_bin);
+                    data_write(collide_and_correct, p_bin);
+                    data_write(villager_force_drop, p_bin);
+                    data_write(unknown, p_bin);
+                    data_write(lock_coop_alliances, p_bin);
+                    data_write(ai_map_type, p_bin);
+                    data_write(per_player_population_cap, p_bin);
+                    data_write(secondary_game_mode, p_bin);
+                    data_write(unknown_3, p_bin);
+                    data_write(unknown_4, p_bin);
+                    data_write(no_waves_on_shore, p_bin);
+                    data_write(map_width, p_bin);
+                    data_write(map_height, p_bin);
+                    data_write(terrain_data, p_bin);
                 }
             } Map;
             /* Units */
@@ -420,6 +592,27 @@ namespace AoE2Scenario_1_45_Namespace
                         vector_cst(unknown_structure_ww_campaign_2, p_bin, victory_version == 2 ? unknown_5[0] : 0);
                         data_read(unknown_4, p_bin);
                     }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(constant_name, p_bin);
+                        data_write(editor_camera_x, p_bin);
+                        data_write(editor_camera_y, p_bin);
+                        data_write(initial_camera_x, p_bin);
+                        data_write(initial_camera_y, p_bin);
+                        data_write(aok_allied_victory, p_bin);
+                        data_write(player_count_for_diplomacy, p_bin);
+                        data_write(diplomacy_for_interaction, p_bin);
+                        data_write(diplomacy_for_ai_system, p_bin);
+                        data_write(color, p_bin);
+                        data_write(victory_version, p_bin);
+                        data_write(unknown, p_bin);
+                        data_write(unknown_2, p_bin);
+                        data_write(unknown_structure_grand_theft_empires, p_bin);
+                        data_write(unknown_5, p_bin);
+                        data_write(unknown_3, p_bin);
+                        data_write(unknown_structure_ww_campaign_2, p_bin);
+                        data_write(unknown_4, p_bin);
+                    }
                 } player_data_3[8];
                 struct PlayerUnitsStruct
                 {
@@ -447,12 +640,29 @@ namespace AoE2Scenario_1_45_Namespace
                             data_read(initial_animation_frame, p_bin);
                             data_read(garrisoned_in_id, p_bin);
                         }
+                        void write(char*& p_bin) const
+                        {
+                            data_write(x, p_bin);
+                            data_write(y, p_bin);
+                            data_write(z, p_bin);
+                            data_write(reference_id, p_bin);
+                            data_write(unit_const, p_bin);
+                            data_write(status, p_bin);
+                            data_write(rotation, p_bin);
+                            data_write(initial_animation_frame, p_bin);
+                            data_write(garrisoned_in_id, p_bin);
+                        }
                     };
                     vector<UnitStruct> units;//repeat: unit_count
                     void read(const char*& p_bin)
                     {
                         data_read(unit_count, p_bin);
                         vector_cst(units, p_bin, unit_count);
+                    }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(unit_count, p_bin);
+                        data_write(units, p_bin);
                     }
                 };
                 vector<PlayerUnitsStruct> players_units; // repeat: number_of_unit_sections
@@ -466,6 +676,17 @@ namespace AoE2Scenario_1_45_Namespace
                         player_data_3[i].read(p_bin);
                     }
                     vector_cst(players_units, p_bin, number_of_unit_sections);
+                }
+                void write(char*& p_bin) const
+                {
+                    data_write(number_of_unit_sections, p_bin);
+                    data_write(player_data_4, p_bin);
+                    data_write(number_of_players, p_bin);
+                    for (size_t i = 0; i < 8; ++i)
+                    {
+                        player_data_3[i].write(p_bin);
+                    }
+                    data_write(players_units, p_bin);
                 }
             } Units;
             /* Triggers */
@@ -605,9 +826,69 @@ namespace AoE2Scenario_1_45_Namespace
                             data_read(reset_timer, p_bin);
                             data_read(object_state, p_bin);
                             data_read(action_type, p_bin);
-                            message.read(p_bin);
-                            sound_name.read(p_bin);
+                            data_read(message, p_bin);
+                            data_read(sound_name, p_bin);
                             vector_cst(selected_object_ids, p_bin, number_of_units_selected > 0 ? number_of_units_selected : 0);
+                        }
+                        void write(char*& p_bin) const
+                        {
+                            data_write(effect_type, p_bin);
+                            data_write(static_value_46, p_bin);
+                            data_write(ai_script_goal, p_bin);
+                            data_write(quantity, p_bin);
+                            data_write(tribute_list, p_bin);
+                            data_write(diplomacy, p_bin);
+                            data_write(number_of_units_selected, p_bin);
+                            data_write(legacy_location_object_reference, p_bin);
+                            data_write(object_list_unit_id, p_bin);
+                            data_write(source_player, p_bin);
+                            data_write(target_player, p_bin);
+                            data_write(technology, p_bin);
+                            data_write(string_id, p_bin);
+                            data_write(unknown_2, p_bin);
+                            data_write(display_time, p_bin);
+                            data_write(trigger_id, p_bin);
+                            data_write(location_x, p_bin);
+                            data_write(location_y, p_bin);
+                            data_write(area_x1, p_bin);
+                            data_write(area_y1, p_bin);
+                            data_write(area_x2, p_bin);
+                            data_write(area_y2, p_bin);
+                            data_write(object_group, p_bin);
+                            data_write(object_type, p_bin);
+                            data_write(instruction_panel_position, p_bin);
+                            data_write(attack_stance, p_bin);
+                            data_write(time_unit, p_bin);
+                            data_write(enabled, p_bin);
+                            data_write(food, p_bin);
+                            data_write(wood, p_bin);
+                            data_write(stone, p_bin);
+                            data_write(gold, p_bin);
+                            data_write(item_id, p_bin);
+                            data_write(flash_object, p_bin);
+                            data_write(force_research_technology, p_bin);
+                            data_write(visibility_state, p_bin);
+                            data_write(scroll, p_bin);
+                            data_write(operation, p_bin);
+                            data_write(object_list_unit_id_2, p_bin);
+                            data_write(button_location, p_bin);
+                            data_write(ai_signal_value, p_bin);
+                            data_write(unknown_3, p_bin);
+                            data_write(object_attributes, p_bin);
+                            data_write(variable, p_bin);
+                            data_write(timer, p_bin);
+                            data_write(facet, p_bin);
+                            data_write(location_object_reference, p_bin);
+                            data_write(play_sound, p_bin);
+                            data_write(player_color, p_bin);
+                            data_write(unknown_4, p_bin);
+                            data_write(color_mood, p_bin);
+                            data_write(reset_timer, p_bin);
+                            data_write(object_state, p_bin);
+                            data_write(action_type, p_bin);
+                            data_write(message, p_bin);
+                            data_write(sound_name, p_bin);
+                            data_write(selected_object_ids, p_bin);
                         }
                     };
                     vector<EffectStruct> effect_data; //re: number_of_effects
@@ -670,7 +951,37 @@ namespace AoE2Scenario_1_45_Namespace
                             data_read(unit_ai_action, p_bin);
                             data_read(unknown_4, p_bin);
                             data_read(object_state, p_bin);
-                            xs_function.read(p_bin);
+                            data_read(xs_function, p_bin);
+                        }
+                        void write(char*& p_bin) const
+                        {
+                            data_write(condition_type, p_bin);
+                            data_write(static_value_21, p_bin);
+                            data_write(quantity, p_bin);
+                            data_write(attribute, p_bin);
+                            data_write(unit_object, p_bin);
+                            data_write(next_object, p_bin);
+                            data_write(object_list, p_bin);
+                            data_write(source_player, p_bin);
+                            data_write(technology, p_bin);
+                            data_write(timer, p_bin);
+                            data_write(unknown, p_bin);
+                            data_write(area_x1, p_bin);
+                            data_write(area_y1, p_bin);
+                            data_write(area_x2, p_bin);
+                            data_write(area_y2, p_bin);
+                            data_write(object_group, p_bin);
+                            data_write(object_type, p_bin);
+                            data_write(ai_signal, p_bin);
+                            data_write(inverted, p_bin);
+                            data_write(unknown_2, p_bin);
+                            data_write(variable, p_bin);
+                            data_write(comparison, p_bin);
+                            data_write(target_player, p_bin);
+                            data_write(unit_ai_action, p_bin);
+                            data_write(unknown_4, p_bin);
+                            data_write(object_state, p_bin);
+                            data_write(xs_function, p_bin);
                         }
                     };
                     vector<ConditionStruct> condition_data; //re: number_of_conditions
@@ -687,15 +998,37 @@ namespace AoE2Scenario_1_45_Namespace
                         data_read(display_on_screen, p_bin);
                         data_read(unknown, p_bin);
                         data_read(mute_objectives, p_bin);
-                        trigger_description.read(p_bin);
-                        trigger_name.read(p_bin);
-                        short_description.read(p_bin);
+                        data_read(trigger_description, p_bin);
+                        data_read(trigger_name, p_bin);
+                        data_read(short_description, p_bin);
                         data_read(number_of_effects, p_bin);
                         vector_cst(effect_data, p_bin, number_of_effects);
                         vector_cst(effect_display_order_array, p_bin, number_of_effects);
                         data_read(number_of_conditions, p_bin);
                         vector_cst(condition_data, p_bin, number_of_conditions);
                         vector_cst(condition_display_order_array, p_bin, number_of_conditions);
+                    }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(enabled, p_bin);
+                        data_write(looping, p_bin);
+                        data_write(description_string_table_id, p_bin);
+                        data_write(display_as_objective, p_bin);
+                        data_write(objective_description_order, p_bin);
+                        data_write(make_header, p_bin);
+                        data_write(short_description_string_table_id, p_bin);
+                        data_write(display_on_screen, p_bin);
+                        data_write(unknown, p_bin);
+                        data_write(mute_objectives, p_bin);
+                        data_write(trigger_description, p_bin);
+                        data_write(trigger_name, p_bin);
+                        data_write(short_description, p_bin);
+                        data_write(number_of_effects, p_bin);
+                        data_write(effect_data, p_bin);
+                        data_write(effect_display_order_array, p_bin);
+                        data_write(number_of_conditions, p_bin);
+                        data_write(condition_data, p_bin);
+                        data_write(condition_display_order_array, p_bin);
                     }
                 };
                 vector<TriggerStruct> trigger_data; //re: number_of_triggers
@@ -709,7 +1042,12 @@ namespace AoE2Scenario_1_45_Namespace
                     void read(const char*& p_bin)
                     {
                         data_read(variable_id, p_bin);
-                        variable_name.read(p_bin);
+                        data_read(variable_name, p_bin);
+                    }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(variable_id, p_bin);
+                        data_write(variable_name, p_bin);
                     }
                 };
                 vector<VariableStruct> variable_data; //re: number_of_variables
@@ -723,6 +1061,17 @@ namespace AoE2Scenario_1_45_Namespace
                     data_read(unknown_bytes, p_bin);
                     data_read(number_of_variables, p_bin);
                     vector_cst(variable_data, p_bin, number_of_variables);
+                }
+                void write(char*& p_bin) const
+                {
+                    data_write(trigger_version, p_bin);
+                    data_write(trigger_instruction_start, p_bin);
+                    data_write(number_of_triggers, p_bin);
+                    data_write(trigger_data, p_bin);
+                    data_write(trigger_display_order_array, p_bin);
+                    data_write(unknown_bytes, p_bin);
+                    data_write(number_of_variables, p_bin);
+                    data_write(variable_data, p_bin);
                 }
             } Triggers;
             /* Files */
@@ -740,20 +1089,35 @@ namespace AoE2Scenario_1_45_Namespace
                     str32 ai_file;
                     void read(const char*& p_bin)
                     {
-                        ai_file_name.read(p_bin);
-                        ai_file.read(p_bin);
+                        data_read(ai_file_name, p_bin);
+                        data_read(ai_file, p_bin);
+                    }
+                    void write(char*& p_bin) const
+                    {
+                        data_write(ai_file_name, p_bin);
+                        data_write(ai_file, p_bin);
                     }
                 };
                 vector<AI2Struct> ai_files; //rep: if (number_of_ai_files.empty() != true) number_of_ai_files[0]
                 void read(const char*& p_bin)
                 {
                     data_read(unknown_2, p_bin);
-                    script_file_path.read(p_bin);
-                    script_file_content.read(p_bin);
+                    data_read(script_file_path, p_bin);
+                    data_read(script_file_content, p_bin);
                     data_read(ai_files_present, p_bin);
                     data_read(unknown_4, p_bin);
                     vector_cst(number_of_ai_files, p_bin, ai_files_present);
                     vector_cst(ai_files, p_bin, number_of_ai_files.empty() ? 0 : number_of_ai_files[0]);
+                }
+                void write(char*& p_bin) const
+                {
+                    data_write(unknown_2, p_bin);
+                    data_write(script_file_path, p_bin);
+                    data_write(script_file_content, p_bin);
+                    data_write(ai_files_present, p_bin);
+                    data_write(unknown_4, p_bin);
+                    data_write(number_of_ai_files, p_bin);
+                    data_write(ai_files, p_bin);
                 }
             } Files;
         };

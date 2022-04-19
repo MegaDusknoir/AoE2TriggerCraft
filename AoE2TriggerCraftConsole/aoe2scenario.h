@@ -21,8 +21,8 @@ namespace AoE2ScenarioNamespace
 	public:
 		AoE2Scenario(const char* file_path);
         ~AoE2Scenario();
-
-        string raw_data;
+        void open(const char* file_path);
+        void save(const char* file_path);
     private:
         static constexpr char current_version[] = "1.45";
         static DeflateClass deflate;

@@ -43,6 +43,13 @@ namespace AoE2ScenarioFileTypesNamespace
 			s = string(p_bin, length);
 			p_bin += length;
 		}
+		void write(char*& p_bin) const
+		{
+			memcpy(p_bin, &length, sizeof(T));
+			p_bin += sizeof(T);
+			memcpy(p_bin, s.data(), length);
+			p_bin += length;
+		}
 	};
 	using str16 = vStr<uint16_t>;
 	using str32 = vStr<uint32_t>;
@@ -56,6 +63,38 @@ namespace AoE2ScenarioFileTypesNamespace
 	{
 		dst.read(src);
 	}
+
+	template <typename T> void data_write(const T& src, char*& dst, size_t size = sizeof(T))
+	{
+		memcpy(dst, &src, size);
+		dst += size;
+	}
+	template <typename T> void data_write(const vStr<T>& src, char*& dst)
+	{
+		src.write(dst);
+	}
+	template <typename T> void data_write(const vector<T>& src, char*& dst)
+	{
+		if (src.size())
+		{
+			for (size_t i = 0; i < src.size(); ++i)
+			{
+				src[i].write(dst);
+			}
+		}
+	}
+	template <size_t n> void data_write(const vector<byte<n>>& src, char*& dst)
+	{
+		if (src.size())
+		{
+			size_t size = src.size() * sizeof(byte<n>);
+			memcpy(dst, &src[0], size);
+			dst += size;
+		}
+	}
+	void data_write(const vector<uint8_t>& src, char*& dst);
+	void data_write(const vector<uint32_t>& src, char*& dst);
+	void data_write(const vector<int32_t>& src, char*& dst);
 
 	template <typename T> void vector_cst(vector<T>& dst, const char*& src, size_t size)
 	{
