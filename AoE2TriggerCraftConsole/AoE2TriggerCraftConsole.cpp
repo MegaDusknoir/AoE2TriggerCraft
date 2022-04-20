@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "aoe2scenario.h"
+#include "../aoe2scenario.h"
 
 using namespace std;
 using namespace AoE2ScenarioNamespace;
