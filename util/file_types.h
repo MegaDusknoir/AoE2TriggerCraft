@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <deque>
+#include <memory>
 
 #define MAX_PLAYER_COUNT 16
 
@@ -14,6 +16,8 @@ namespace AoE2ScenarioFileTypesNamespace
 	using std::ios;
 	using std::size_t;
 	using std::vector;
+	using std::deque;
+	using std::unique_ptr;
 
 	template <size_t n>
 	class byte
@@ -34,6 +38,7 @@ namespace AoE2ScenarioFileTypesNamespace
 	class vStr
 	{
 	public:
+		vStr():length(0) {}
 		T length;
 		string s;
 		void read(const char*& p_bin)

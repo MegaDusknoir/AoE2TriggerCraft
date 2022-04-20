@@ -14,6 +14,16 @@ const char save_path[] = "D:/Age of Empires/AoE2TriggerCraft/AoE2TriggerCraftCon
 int main()
 {
 	scen.open(scn_path);
+    scen.add_trigger();
+    scen.delete_trigger(112, 78);
+    scen.add_trigger(5);
+    scen.delete_trigger(9,12);
+    scen.add_trigger(9);
+    scen.undo();
+    scen.undo();
+    scen.undo();
+    scen.undo();
+    scen.undo();
     scen.save(save_path);
     AoE2Scenario* scen3 = new AoE2Scenario(save_path);
     delete scen3;

@@ -86,4 +86,40 @@ namespace AoE2ScenarioNamespace
         out.resize(out_size);
         raw = std::move(out);
     }
+    void AoE2Scenario::undo(void)
+    {
+        if (operator_backward.empty() == false)
+        {
+            operator_backward.back()->undo();
+            operator_forward.push_back(std::move(operator_backward.back()));
+            operator_backward.pop_back();
+        }
+    }
+    void AoE2Scenario::redo(void)
+    {
+        if (operator_forward.empty() == false)
+        {
+            operator_forward.back()->redo();
+            operator_backward.push_back(std::move(operator_forward.back()));
+            operator_forward.pop_back();
+        }
+    }
+    iterTrigger AoE2Scenario::add_trigger(int32_t location)
+    {
+        operator_backward.push_back(unique_ptr<BaseOperator>(new OperatorAddTrigger(*this, location)));
+        operator_forward.clear();
+        return dynamic_cast<OperatorAddTrigger*>(operator_backward.back().get())->get_return();
+    }
+    iterTrigger AoE2Scenario::delete_trigger(int32_t front, int32_t back)
+    {
+        operator_backward.push_back(unique_ptr<BaseOperator>(new OperatorDelTrigger(*this, front, back)));
+        operator_forward.clear();
+        return dynamic_cast<OperatorDelTrigger*>(operator_backward.back().get())->get_return();
+    }
+    void AoE2Scenario::sort_trigger()
+    {
+        operator_backward.push_back(unique_ptr<BaseOperator>(new OperatorSortTrigger(*this)));
+        operator_forward.clear();
+        //return dynamic_cast<OperatorSortTrigger*>(operator_backward.back().get())->get_return();
+    }
 }

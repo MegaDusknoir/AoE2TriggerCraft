@@ -21,10 +21,10 @@
     <ClCompile Include="..\aoe2scenario.cpp">
       <Filter>Parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\util\utilio.cpp">
+    <ClCompile Include="..\util\file_types.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\util\file_types.cpp">
+    <ClCompile Include="..\util\utilio.cpp">
       <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>

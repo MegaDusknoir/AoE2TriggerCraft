@@ -6,6 +6,7 @@ namespace AoE2Scenario_1_45_Namespace
     using namespace AoE2ScenarioFileTypesNamespace;
     class AoE2Scenario_1_45
     {
+    public:
         class FileHeader
         {
         public:
@@ -44,7 +45,6 @@ namespace AoE2Scenario_1_45_Namespace
                 return p_bin - dst_bin;
             }
         public:
-        private:
             char version[4];
             uint32_t header_length;
             int32_t savable;
