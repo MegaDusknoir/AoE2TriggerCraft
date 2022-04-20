@@ -4,14 +4,21 @@
 namespace AoE2ScenarioNamespace
 {
     DeflateClass AoE2Scenario::deflate;
+    AoE2Scenario::AoE2Scenario()
+    {
+    }
     AoE2Scenario::~AoE2Scenario()
     {
     }
     AoE2Scenario::AoE2Scenario(const char* file_path)
     {
+        open(file_path);
+    }
+    void AoE2Scenario::open(const char* file_path)
+    {
         AutoFile fin(file_path, ios::in | ios::binary);
         string check_version(4, 0);
-        fin->read(reinterpret_cast<char *>(&check_version[0]), 4);
+        fin->read(reinterpret_cast<char*>(&check_version[0]), 4);
         if (check_version == string(current_version))
         {
 #ifndef NDEBUG
@@ -21,7 +28,7 @@ namespace AoE2ScenarioNamespace
             auto file_size = static_cast<size_t>(fin->tellg());
             fin->seekg(ios::beg);
             string raw_binary(file_size, 0);
-            fin->read(reinterpret_cast<char *>(&raw_binary[0]), file_size);
+            fin->read(reinterpret_cast<char*>(&raw_binary[0]), file_size);
             fin->close();
             auto header_length = scen.header.read(raw_binary.data());
             string scen_body = raw_binary.substr(header_length);
@@ -42,10 +49,6 @@ namespace AoE2ScenarioNamespace
             std::cout << "Version " << check_version << " not supported yet." << std::endl;
 #endif
         }
-    }
-    void AoE2Scenario::open(const char* file_path)
-    {
-        //Todo
     }
 
     void AoE2Scenario::save(const char* file_path)
