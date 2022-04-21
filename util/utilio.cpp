@@ -49,6 +49,14 @@ AutoFile::AutoFile(const char* filename, std::ios_base::openmode mode)
 		throw std::runtime_error("Can not open file.");
 	}
 }
+AutoFile::AutoFile(const wchar_t* filename, std::ios_base::openmode mode)
+	:_file(filename, mode)
+{
+	if (_file.fail())
+	{
+		throw std::runtime_error("Can not open file.");
+	}
+}
 AutoFile::~AutoFile()
 {
 	if (_file.is_open())

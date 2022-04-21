@@ -14,9 +14,22 @@ namespace AoE2ScenarioNamespace
     {
         open(file_path);
     }
+    AoE2Scenario::AoE2Scenario(const wchar_t* file_path)
+    {
+        open(file_path);
+    }
     void AoE2Scenario::open(const char* file_path)
     {
         AutoFile fin(file_path, ios::in | ios::binary);
+        open(fin);
+    }
+    void AoE2Scenario::open(const wchar_t* file_path)
+    {
+        AutoFile fin(file_path, ios::in | ios::binary);
+        open(fin);
+    }
+	void AoE2Scenario::open(AutoFile& fin)
+    {
         string check_version(4, 0);
         fin->read(reinterpret_cast<char*>(&check_version[0]), 4);
         if (check_version == string(current_version))
@@ -45,6 +58,9 @@ namespace AoE2ScenarioNamespace
         }
         else
         {
+            string err_what;
+            err_what = err_what + "Version " + check_version + " not supported yet.";
+            throw std::runtime_error(err_what);
 #ifndef NDEBUG
             std::cout << "Version " << check_version << " not supported yet." << std::endl;
 #endif
@@ -52,6 +68,16 @@ namespace AoE2ScenarioNamespace
     }
 
     void AoE2Scenario::save(const char* file_path)
+    {
+        AutoFile fout(file_path, ios::out | ios::binary);
+        save(fout);
+    }
+    void AoE2Scenario::save(const wchar_t* file_path)
+    {
+        AutoFile fout(file_path, ios::out | ios::binary);
+        save(fout);
+    }
+    void AoE2Scenario::save(AutoFile& fout)
     {
 #ifndef NDEBUG
         auto t1 = clock();
@@ -62,7 +88,6 @@ namespace AoE2ScenarioNamespace
         sbody.resize(scen.body.write(&sbody[0]));
         scen.body.read(sbody.data());
         deflate_compress(sbody);
-		AutoFile fout(file_path, ios::out | ios::binary);
         fout->write(shead.data(), shead.size());
         fout->write(sbody.data(), sbody.size());
         fout->close();

@@ -20,6 +20,7 @@ class AutoFile
 {
 public:
 	AutoFile(const char* filename, std::ios_base::openmode mode);
+	AutoFile(const wchar_t* filename, std::ios_base::openmode mode);
 	~AutoFile();
 
 	std::fstream* operator->();

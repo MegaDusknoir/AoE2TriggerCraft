@@ -20,7 +20,7 @@ namespace AoE2ScenarioFileTypesNamespace
 	using std::unique_ptr;
 
 	template <size_t n>
-	class byte
+	class bytes
 	{
 	public:
 		uint8_t value[n];
@@ -88,11 +88,11 @@ namespace AoE2ScenarioFileTypesNamespace
 			}
 		}
 	}
-	template <size_t n> void data_write(const vector<byte<n>>& src, char*& dst)
+	template <size_t n> void data_write(const vector<bytes<n>>& src, char*& dst)
 	{
 		if (src.size())
 		{
-			size_t size = src.size() * sizeof(byte<n>);
+			size_t size = src.size() * sizeof(bytes<n>);
 			memcpy(dst, &src[0], size);
 			dst += size;
 		}
@@ -112,12 +112,12 @@ namespace AoE2ScenarioFileTypesNamespace
 			}
 		}
 	}
-	template <size_t n> void vector_cst(vector<byte<n>>& dst, const char*& src, size_t size)
+	template <size_t n> void vector_cst(vector<bytes<n>>& dst, const char*& src, size_t size)
 	{
 		if (size)
 		{
 			dst.resize(size);
-			data_read(dst[0], src, size * sizeof(byte<n>));
+			data_read(dst[0], src, size * sizeof(bytes<n>));
 		}
 	}
 	void vector_cst(vector<uint8_t>& dst, const char*& src, size_t size);

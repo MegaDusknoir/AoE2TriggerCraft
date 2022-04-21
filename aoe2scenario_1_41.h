@@ -79,7 +79,7 @@ namespace AoE2Scenario_1_41_Namespace
                     uint32_t cty_mode;
                 } player_data_1[MAX_PLAYER_COUNT];
                 uint32_t per_player_lock_civilization[MAX_PLAYER_COUNT];
-                byte<9> unknown;
+                bytes<9> unknown;
                 str16 filename;
                 void read(const char*& p_bin)
                 {
@@ -178,7 +178,7 @@ namespace AoE2Scenario_1_41_Namespace
                 str16 ai_names[MAX_PLAYER_COUNT];
                 struct AIStruct
                 {
-                    byte<8> unknown;
+                    bytes<8> unknown;
                     str32 ai_per_file_text;
                     void read(const char*& p_bin)
                     {
@@ -239,7 +239,7 @@ namespace AoE2Scenario_1_41_Namespace
                 {
                     uint32_t stance_with_each_player[16];
                 } per_player_diplomacy[16];
-                byte<60> individual_victories[192];
+                bytes<60> individual_victories[192];
                 uint32_t separator;
                 uint32_t per_player_allied_victory[16];
                 uint8_t lock_teams;
@@ -271,9 +271,9 @@ namespace AoE2Scenario_1_41_Namespace
                 uint32_t naval_mode;
                 uint32_t all_techs;
                 uint32_t per_player_starting_age[16];
-                byte<17> unknown_1;
+                bytes<17> unknown_1;
                 uint8_t per_player_base_priority[8];
-                byte<7> unknown_2;
+                bytes<7> unknown_2;
                 uint32_t number_of_triggers;
                 void read(const char*& p_bin)
                 {
@@ -305,16 +305,16 @@ namespace AoE2Scenario_1_41_Namespace
             /* Map */
             struct MapStruct
             {
-                byte<2> separator_1;
+                bytes<2> separator_1;
                 str16 water_definition;
-                byte<2> separator_2;
+                bytes<2> separator_2;
                 str16 map_color_mood;
-                byte<2> separator_3;
+                bytes<2> separator_3;
                 str16 script_name;
                 uint8_t block_humanity_team_change;
                 uint8_t collide_and_correct;
                 uint8_t villager_force_drop;
-                byte<128> unknown;
+                bytes<128> unknown;
                 int32_t player_1_camera_y;
                 int32_t player_1_camera_x;
                 int8_t no_waves_on_shore;
@@ -324,7 +324,7 @@ namespace AoE2Scenario_1_41_Namespace
                 {
                     uint8_t terrain_id;
                     uint8_t elevation;
-                    byte<3> unused;
+                    bytes<3> unused;
                     int16_t layer;
                     void read(const char*& p_bin)
                     {
@@ -385,10 +385,10 @@ namespace AoE2Scenario_1_41_Namespace
                     float victory_version;
                     uint16_t unknown;
                     vector<uint8_t> unknown_2;//repeat:"7 if victory_version == 2 else 0"
-                    vector<byte<44>> unknown_structure_grand_theft_empires;//repeat:unknown
+                    vector<bytes<44>> unknown_structure_grand_theft_empires;//repeat:unknown
                     vector<uint8_t> unknown_5; //repeat:"1 if victory_version == 2 else 0"
                     uint8_t unknown_3[7];
-                    vector<byte<32>> unknown_structure_ww_campaign_2;//repeat: unknown_5
+                    vector<bytes<32>> unknown_structure_ww_campaign_2;//repeat: unknown_5
                     int32_t unknown_4;
                     void read(const char*& p_bin)
                     {
@@ -475,7 +475,7 @@ namespace AoE2Scenario_1_41_Namespace
                     uint8_t make_header;
                     int32_t short_description_string_table_id;
                     uint8_t display_on_screen;
-                    byte<5> unknown;
+                    bytes<5> unknown;
                     uint8_t mute_objectives;
                     str32 trigger_description;
                     str32 trigger_name;
@@ -681,7 +681,7 @@ namespace AoE2Scenario_1_41_Namespace
                 };
                 vector<TriggerStruct> trigger_data; //re: number_of_triggers
                 vector<uint32_t> trigger_display_order_array; //re: number_of_triggers
-                byte<1028> unknown_bytes;
+                bytes<1028> unknown_bytes;
                 uint32_t number_of_variables;
                 struct VariableStruct
                 {
@@ -709,11 +709,11 @@ namespace AoE2Scenario_1_41_Namespace
             /* Files */
             struct FilesStruct
             {
-                byte<4> unknown_2;
+                bytes<4> unknown_2;
                 str16 script_file_path;
                 str32 script_file_content;
                 uint32_t ai_files_present;
-                byte<4> unknown_4;
+                bytes<4> unknown_4;
                 vector<uint32_t> number_of_ai_files; //rep: ai_files_present
                 struct AI2Struct
                 {

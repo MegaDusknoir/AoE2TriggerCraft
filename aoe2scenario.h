@@ -30,11 +30,17 @@ namespace AoE2ScenarioNamespace
 
     class AoE2Scenario
 	{
+    private:
+        void open(AutoFile& fin);
+        void save(AutoFile& fout);
 	public:
         AoE2Scenario();
 		AoE2Scenario(const char* file_path);
+        AoE2Scenario(const wchar_t* file_path);
         ~AoE2Scenario();
+        void open(const wchar_t* file_path);
         void open(const char* file_path);
+        void save(const wchar_t* file_path);
         void save(const char* file_path);
         AoE2ScenarioCurrent scen;
     private:
