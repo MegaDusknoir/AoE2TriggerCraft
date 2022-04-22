@@ -17,8 +17,17 @@
 #define IDS_SAVE_FAIL                   108
 #define IDC_AOE2TCWIN                   109
 #define IDS_OPEN_FAIL                   110
+#define IDS_EDITOR_TITLE_TRIGGER        111
+#define IDS_EDITOR_TITLE_TERRAIN        112
+#define IDS_EDITOR_TITLE_UNITS          113
+#define IDS_WELCOME                     114
+#define IDS_OPEN_SUCCESS                115
 #define IDR_MAINFRAME                   128
 #define IDS_ALL_TYPE                    129
+#define IDD_TRIGGERS                    131
+#define IDD_UNITS                       132
+#define IDC_TREE1                       1007
+#define IDC_TRIGGER_TREE                1007
 #define ID_32771                        32771
 #define IDM_OPEN                        32772
 #define ID_32773                        32773
@@ -30,9 +39,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

@@ -33,9 +33,10 @@
 
 # Visual Studio
 **/.vs
+*.aps
 
 # Build File
-**/x64/Debug
-**/x86/Debug
+**/Debug
+**/Debug
 **/x64/Release
 **/x86/Release
