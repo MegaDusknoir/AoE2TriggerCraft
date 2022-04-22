@@ -148,16 +148,16 @@ namespace AoE2ScenarioNamespace
                 deleted_triggers.push_back(std::move(trigger_data[i]));
                 deleted_triggers_order.push_back(std::move(trigger_order[i]));
             }
-            _return = trigger_data.erase(trigger_data.begin() + _front, trigger_data.begin() + _back);
-            trigger_order.erase(trigger_order.begin() + _front, trigger_order.begin() + _back);
+            _return = trigger_data.erase(trigger_data.begin() + _front, trigger_data.begin() + _back + 1);
+            trigger_order.erase(trigger_order.begin() + _front, trigger_order.begin() + _back + 1);
             _scen.trigger_count_check();
         }
         void undo(void)
         {
             auto& trigger_data = _scen.scen.body.Triggers.trigger_data;
             auto& trigger_order = _scen.scen.body.Triggers.trigger_display_order_array;
-            trigger_data.insert(trigger_data.begin() + _front, deleted_triggers.begin(), deleted_triggers.end() - 1);
-            trigger_order.insert(trigger_order.begin() + _front, deleted_triggers_order.begin(), deleted_triggers_order.end() - 1);
+            trigger_data.insert(trigger_data.begin() + _front, deleted_triggers.begin(), deleted_triggers.end());
+            trigger_order.insert(trigger_order.begin() + _front, deleted_triggers_order.begin(), deleted_triggers_order.end());
             _scen.trigger_count_check();
         }
         auto& get_return(void)

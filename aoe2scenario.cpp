@@ -86,7 +86,6 @@ namespace AoE2ScenarioNamespace
         string sbody(16 * 1024 * 1024, '\0');
         shead.resize(scen.header.write(&shead[0]));
         sbody.resize(scen.body.write(&sbody[0]));
-        scen.body.read(sbody.data());
         deflate_compress(sbody);
         fout->write(shead.data(), shead.size());
         fout->write(sbody.data(), sbody.size());
