@@ -144,9 +144,9 @@ namespace AoE2ScenarioFileTypesNamespace
 
 	template <typename T> void vector_cst(vector<T>& dst, const char*& src, size_t size)
 	{
+		dst.resize(size);
 		if (size)
 		{
-			dst.resize(size);
 			for (size_t i = 0; i < size; ++i)
 			{
 				dst[i].read(src);
@@ -155,9 +155,9 @@ namespace AoE2ScenarioFileTypesNamespace
 	}
 	template <size_t n> void vector_cst(vector<bytes<n>>& dst, const char*& src, size_t size)
 	{
+		dst.resize(size);
 		if (size)
 		{
-			dst.resize(size);
 			data_read(dst[0], src, size * sizeof(bytes<n>));
 		}
 	}
