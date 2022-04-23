@@ -325,50 +325,48 @@ namespace AoE2ScenarioNamespace
     }
     void TriggerManager::change_player(TriggerStruct& trig, int32_t base_player, int32_t player, uint32_t mode)
     {
-        if (base_player != player)
-        {
-            string player_mark(" (p1)");
-            player_mark[3] = '0' + player;
-            trig.trigger_name += player_mark;
-            for (auto& condition : trig.condition_data)
-            {
-                if (mode & CP_MOD_SOURCE)
-                {
-                    change_player_judge(base_player, player, mode, condition.source_player);
-                }
-                if (mode & CP_MOD_TARGET)
-                {
-                    change_player_judge(base_player, player, mode, condition.target_player);
-                }
-            }
-            for (auto& effect : trig.effect_data)
-            {
-                if (mode & CP_MOD_SOURCE)
-                {
-                    change_player_judge(base_player, player, mode, effect.source_player);
-                }
-                if (mode & CP_MOD_TARGET)
-                {
-                    change_player_judge(base_player, player, mode, effect.target_player);
-                }
-                if (mode & CP_MOD_COLOR)
-                {
-                    change_player_judge(base_player, player, mode, effect.player_color);
-                }
-            }
-        }
+		string player_mark(" (p1)");
+		player_mark[3] = '0' + player;
+		trig.trigger_name += player_mark;
+		for (auto& condition : trig.condition_data)
+		{
+			if (mode & CP_MOD_SOURCE)
+			{
+				change_player_judge(base_player, player, mode, condition.source_player);
+			}
+			if (mode & CP_MOD_TARGET)
+			{
+				change_player_judge(base_player, player, mode, condition.target_player);
+			}
+		}
+		for (auto& effect : trig.effect_data)
+		{
+			if (mode & CP_MOD_SOURCE)
+			{
+				change_player_judge(base_player, player, mode, effect.source_player);
+			}
+			if (mode & CP_MOD_TARGET)
+			{
+				change_player_judge(base_player, player, mode, effect.target_player);
+			}
+			if (mode & CP_MOD_COLOR)
+			{
+				change_player_judge(base_player, player, mode, effect.player_color);
+			}
+		}
 	}
 	void TriggerManager::change_player_judge(int32_t base_player, int32_t player, uint32_t mode, int32_t& current_attr)
 	{
-		if (current_attr != -1
+		if (current_attr != -1 && current_attr != 0
 			&& !((mode & CP_STRICT_BASE) && current_attr != base_player))
 		{
 			current_attr = player;
 		}
-		else if ((mode & CP_ONE_TO_ALL) && current_attr == player)
-		{
-			current_attr = base_player;
-		}
+        /* not certainly effective */
+		//else if ((mode & CP_ONE_TO_ALL) && current_attr == player)
+		//{
+		//	current_attr = base_player;
+		//}
 	}
     void TriggerManager::copy_to_all(TriggerStructIdx to_copy, uint32_t mode)
     {
