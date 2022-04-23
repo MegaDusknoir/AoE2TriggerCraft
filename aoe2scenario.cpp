@@ -104,7 +104,9 @@ namespace AoE2ScenarioNamespace
 
     void AoE2Scenario::deflate_decompress(string& raw)
     {
-        string out(raw.size() * 128, '\0');
+        //simple scenario may has larger compression ratio, so at least 4MiB
+		size_t out_buf_size = std::max(raw.size() * 128, size_t(4 * 1024 * 1024));
+        string out(out_buf_size, '\0');
         size_t out_size = deflate.decompress(raw.data(), raw.size(), static_cast<void *>(&out[0]), out.size());
         out.resize(out_size);
         raw = std::move(out);

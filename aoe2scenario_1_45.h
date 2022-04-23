@@ -22,7 +22,7 @@ namespace AoE2Scenario_1_45_Namespace
                 data_read(unknown_value, p_bin);
                 data_read(unknown_value_2, p_bin);
                 data_read(amount_of_unknown_numbers, p_bin);
-                data_read(unknown_numbers, p_bin);
+                vector_cst(unknown_numbers, p_bin, amount_of_unknown_numbers);
                 creator_name.read(p_bin);
                 data_read(trigger_count, p_bin);
                 return p_bin - raw_bin;
@@ -54,7 +54,7 @@ namespace AoE2Scenario_1_45_Namespace
             uint32_t unknown_value; //Always (?) 1k
             uint32_t unknown_value_2; //Always (?) 1
             uint32_t amount_of_unknown_numbers;
-            uint32_t unknown_numbers[6]; // (!) may not be const 6
+            vector<uint32_t> unknown_numbers; // (!) may not be const 6
             str32 creator_name;
             uint32_t trigger_count;
         private:
