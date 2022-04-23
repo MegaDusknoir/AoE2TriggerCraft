@@ -15,6 +15,13 @@
 #define OID_ADD_TRIGGER 0
 #define OID_DEL_TRIGGER 1
 #define OID_SORT_TRIGGER 2
+
+#define CP_MOD_SOURCE 0x00000001L
+#define CP_MOD_TARGET 0x00000002L
+#define CP_MOD_COLOR  0x00000004L
+#define CP_ONE_TO_ALL 0x00000008L
+#define CP_STRICT_BASE 0x00000010L
+
 namespace AoE2ScenarioNamespace
 {
     using namespace AoE2ScenarioFileTypesNamespace;
@@ -27,6 +34,7 @@ namespace AoE2ScenarioNamespace
     using iterTriggerOrder = vector<struTriggerOrder>::iterator;
 
     class BaseOperator;
+    class TriggerManager;
 
     class AoE2Scenario
 	{
@@ -52,6 +60,7 @@ namespace AoE2ScenarioNamespace
         void deflate_decompress(string& raw);
         void deflate_compress(string& raw);
     public:
+        unique_ptr<TriggerManager> triggers;
         void undo(void);
         void redo(void);
         void trigger_count_check(void)
@@ -66,6 +75,36 @@ namespace AoE2ScenarioNamespace
         void sort_trigger();
     };
 
+    class TriggerManager
+    {
+        using TriggerStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct;
+        using TriggerStructIdx = uint32_t;
+        AoE2ScenarioCurrent* scen;
+        vector<TriggerStructIdx> list_by_order;
+        vector<TriggerStructIdx> list_deleted;
+    public:
+        TriggerManager(AoE2ScenarioCurrent* scn) :scen(scn)
+        {}
+        TriggerStruct& operator[](size_t idx);
+        TriggerStructIdx size();
+        void add(const TriggerStruct& val);
+        void add(TriggerStruct&& val);
+        void del(TriggerStructIdx to_del);
+        void del(TriggerStructIdx to_del_begin, TriggerStructIdx n);
+        void mov(TriggerStructIdx target, TriggerStructIdx idx_begin, TriggerStructIdx idx_end);
+        void copy_to_all(TriggerStructIdx to_copy, uint32_t mode);
+        void sort_by_order();
+        void load();
+        void confirm();
+    private:
+        void trigger_repoint(TriggerStruct& trig, uint32_t old_id, int32_t new_id);
+        void change_player(TriggerStruct& trig, int32_t base_player, int32_t player, uint32_t mode);
+        void change_player_judge(int32_t base_player, int32_t player, uint32_t mode, int32_t& current_attr);
+        void del(vector<TriggerStructIdx>::iterator to_del);
+        void mov(vector<TriggerStructIdx>::iterator target, vector<TriggerStructIdx>::iterator idx_begin, vector<TriggerStructIdx>::iterator idx_end);
+    };
+
+    //deprecated redo/undo operators, may update in the future
     class BaseOperator
     {
     public:

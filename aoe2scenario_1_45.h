@@ -697,79 +697,79 @@ namespace AoE2Scenario_1_45_Namespace
                 int32_t number_of_triggers;
                 struct TriggerStruct
                 {
-                    uint32_t enabled;
-                    int8_t looping;
-                    int32_t description_string_table_id;
-                    uint8_t display_as_objective;
-                    uint32_t objective_description_order;
-                    uint8_t make_header;
-                    int32_t short_description_string_table_id;
-                    uint8_t display_on_screen;
-                    bytes<5> unknown;
-                    uint8_t mute_objectives;
-                    str32 trigger_description;
-                    str32 trigger_name;
-                    str32 short_description;
+					uint32_t enabled;                           //开启
+					int8_t looping;                             //循环
+					int32_t description_string_table_id;        //触发描述字串ID
+					uint8_t display_as_objective;               //显示任务
+					uint32_t objective_description_order;       //显示任务顺序
+					uint8_t make_header;                        //设为标题
+                    int32_t short_description_string_table_id;  //简短描述字串ID
+                    uint8_t display_on_screen;                  //在屏幕上显示
+                    bytes<5> unknown;                           //unknown value regularly all 0
+                    uint8_t mute_objectives;                    //静音任务
+                    str32 trigger_description;                  //触发描述
+                    str32 trigger_name;                         //触发名
+                    str32 short_description;                    //简短描述
                     int32_t number_of_effects;
                     struct EffectStruct
                     {
-                        int32_t effect_type;
-                        int32_t static_value_46;
-                        int32_t ai_script_goal;
-                        int32_t quantity;
-                        int32_t tribute_list;
-                        int32_t diplomacy;
-                        int32_t number_of_units_selected;
-                        int32_t legacy_location_object_reference;
-                        int32_t object_list_unit_id;
-                        int32_t source_player;
-                        int32_t target_player;
-                        int32_t technology;
-                        int32_t string_id;
-                        int32_t unknown_2;
-                        int32_t display_time;
-                        int32_t trigger_id;
+                        int32_t effect_type;                        //效果类型
+                        int32_t static_value_46;                    //Not used(?) regularly 48
+                        int32_t ai_script_goal;                     //AI脚本goal
+                        int32_t quantity;                           //数量
+                        int32_t tribute_list;                       //资源列表
+                        int32_t diplomacy;                          //外交
+                        int32_t number_of_units_selected;           //已选择单位数量
+                        int32_t legacy_location_object_reference;   //unknown regularly regularly -1
+                        int32_t object_list_unit_id;                //单位列表ID
+                        int32_t source_player;                      //源玩家
+                        int32_t target_player;                      //目标玩家
+                        int32_t technology;                         //科技
+                        int32_t string_id;                          //字串ID
+                        int32_t unknown_2;                          //
+                        int32_t display_time;                       //定时器
+                        int32_t trigger_id;                         //触发ID
                         int32_t location_x;
                         int32_t location_y;
                         int32_t area_x1;
                         int32_t area_y1;
-                        int32_t area_x2;
-                        int32_t area_y2;
-                        int32_t object_group;
-                        int32_t object_type;
-                        int32_t instruction_panel_position;
-                        int32_t attack_stance;
-                        int32_t time_unit;
-                        int32_t enabled;
-                        int32_t food;
-                        int32_t wood;
-                        int32_t stone;
-                        int32_t gold;
-                        int32_t item_id;
-                        int32_t flash_object;
-                        int32_t force_research_technology;
-                        int32_t visibility_state;
-                        int32_t scroll;
-                        int32_t operation;
-                        int32_t object_list_unit_id_2;
-                        int32_t button_location;
-                        int32_t ai_signal_value;
-                        int32_t unknown_3;
-                        int32_t object_attributes;
-                        int32_t variable;
-                        int32_t timer;
-                        int32_t facet;
-                        int32_t location_object_reference;
-                        int32_t play_sound;
-                        int32_t player_color;
-                        int32_t unknown_4;
-                        int32_t color_mood;
-                        int32_t reset_timer;
-                        int32_t object_state;
-                        int32_t action_type;
-                        str32 message;
-                        str32 sound_name;
-                        vector<int32_t> selected_object_ids;
+                        int32_t area_x2;                            //shall >= x1
+                        int32_t area_y2;                            //shall >= y1
+                        int32_t object_group;                       //单位种属
+                        int32_t object_type;                        //单位类型
+                        int32_t instruction_panel_position;         //显示指南位置
+                        int32_t attack_stance;                      //战斗姿态
+                        int32_t time_unit;                          //定时器时间单位
+                        int32_t enabled;                            //正向/逆向
+                        int32_t food;                               //食物
+                        int32_t wood;                               //木材
+                        int32_t stone;                              //石料
+                        int32_t gold;                               //黄金
+                        int32_t item_id;                            //unknown regularly regularly -1
+                        int32_t flash_object;                       //闪烁单位(不改权)
+                        int32_t force_research_technology;          //强制研发科技
+                        int32_t visibility_state;                   //视觉状态
+                        int32_t scroll;                             //滚动(改变视角)
+                        int32_t operation;                          //数值操作方式
+                        int32_t object_list_unit_id_2;              //第二个单位列表ID
+                        int32_t button_location;                    //按键位置
+                        int32_t ai_signal_value;                    //AI信号值
+                        int32_t unknown_3;                          //unknown regularly regularly -1
+                        int32_t object_attributes;                  //单位属性
+                        int32_t variable;                           //变量
+                        int32_t timer;                              //定时器ID
+                        int32_t facet;                              //物件朝向
+                        int32_t location_object_reference;          //作为目标点的单位
+                        int32_t play_sound;                         //指南播放声音
+                        int32_t player_color;                       //玩家颜色
+                        int32_t unknown_4;                          //unknown regularly regularly -1
+                        int32_t color_mood;                         //色调
+                        int32_t reset_timer;                        //重置定时器
+                        int32_t object_state;                       //单位状态
+                        int32_t action_type;                        //行动类型
+                        str32 message;                              //信息
+                        str32 sound_name;                           //声音名
+                        vector<int32_t> selected_object_ids;        //选中单位列表
                         void read(const char*& p_bin)
                         {
                             data_read(effect_type, p_bin);
@@ -891,38 +891,38 @@ namespace AoE2Scenario_1_45_Namespace
                             data_write(selected_object_ids, p_bin);
                         }
                     };
-                    vector<EffectStruct> effect_data; //re: number_of_effects
+                    vector<EffectStruct> effect_data;           //re: number_of_effects
                     vector<int32_t> effect_display_order_array; //re: number_of_effects
                     int32_t number_of_conditions;
                     struct ConditionStruct
                     {
-                        int32_t condition_type;
-                        int32_t static_value_21;
-                        int32_t quantity;
-                        int32_t attribute;
-                        int32_t unit_object;
-                        int32_t next_object;
-                        int32_t object_list;
-                        int32_t source_player;
-                        int32_t technology;
-                        int32_t timer;
-                        int32_t unknown;
+                        int32_t condition_type;     //条件类型
+                        int32_t static_value_21;    //Not used(?) regularly 23
+                        int32_t quantity;           //数量
+                        int32_t attribute;          //属性
+                        int32_t unit_object;        //设定单位
+                        int32_t next_object;        //下一个单位
+                        int32_t object_list;        //单位列表
+                        int32_t source_player;      //源玩家
+                        int32_t technology;         //科技
+                        int32_t timer;              //定时器
+                        int32_t unknown;            //unknown value regularly -1
                         int32_t area_x1;
                         int32_t area_y1;
-                        int32_t area_x2;
-                        int32_t area_y2;
-                        int32_t object_group;
-                        int32_t object_type;
-                        int32_t ai_signal;
-                        int32_t inverted;
-                        int32_t unknown_2;
-                        int32_t variable;
-                        int32_t comparison;
-                        int32_t target_player;
-                        int32_t unit_ai_action;
-                        int32_t unknown_4;
-                        int32_t object_state;
-                        str32 xs_function;
+                        int32_t area_x2;            //shall >= x1
+                        int32_t area_y2;            //shall >= y1
+                        int32_t object_group;       //单位种属
+                        int32_t object_type;        //单位类型
+                        int32_t ai_signal;          //AI信号
+                        int32_t inverted;           //反转条件
+                        int32_t unknown_2;          //unknown value regularly -1
+                        int32_t variable;           //变量
+                        int32_t comparison;         //比较条件
+                        int32_t target_player;      //目标玩家
+                        int32_t unit_ai_action;     //单位行动类型
+                        int32_t unknown_4;          //unknown value regularly -1
+                        int32_t object_state;       //单位状态
+                        str32 xs_function;          //xs脚本
                         void read(const char*& p_bin)
                         {
                             data_read(condition_type, p_bin);
@@ -984,7 +984,7 @@ namespace AoE2Scenario_1_45_Namespace
                             data_write(xs_function, p_bin);
                         }
                     };
-                    vector<ConditionStruct> condition_data; //re: number_of_conditions
+                    vector<ConditionStruct> condition_data;     //re: number_of_conditions
                     vector<int32_t> condition_display_order_array; //re: number_of_conditions
                     void read(const char*& p_bin)
                     {

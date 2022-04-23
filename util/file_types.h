@@ -39,8 +39,49 @@ namespace AoE2ScenarioFileTypesNamespace
 	{
 	public:
 		vStr():length(0) {}
+		vStr(string& _s) :length(_s.size()), s(_s) {}
 		T length;
 		string s;
+		operator string()
+		{
+			string ret = s;
+			if (!ret.empty() && ret.back() == '\0')
+			{
+				ret.push_back('\0');
+			}
+			return ret;
+		}
+		vStr& operator=(const string& rhs)
+		{
+			bool trail_zero = (!s.empty() && s.back() == '\0');
+			s = rhs;
+			if (trail_zero)
+			{
+				s.push_back('\0');
+			}
+			length = rhs.size();
+			return *this;
+		}
+		vStr& operator+=(const string& rhs)
+		{
+			bool trail_zero = (!s.empty() && s.back() == '\0');
+			if (trail_zero)
+			{
+				s.pop_back();
+			}
+			s += rhs;
+			if (trail_zero)
+			{
+				s.push_back('\0');
+			}
+			length += rhs.size();
+			return *this;
+		}
+		vStr& operator+(const string& rhs)
+		{
+			vStr temp(s);
+			return temp += rhs;
+		}
 		void read(const char*& p_bin)
 		{
 			memcpy(&length, p_bin, sizeof(T));
