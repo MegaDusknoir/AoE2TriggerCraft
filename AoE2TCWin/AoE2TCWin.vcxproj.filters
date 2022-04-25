@@ -42,6 +42,18 @@
     <ClInclude Include="..\aoe2scenario_1_45.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="view\editors.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\util\utf8conv\utf8conv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\util\utf8conv\utf8except.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\util\gason\gason.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AoE2TCWin.cpp">
@@ -54,6 +66,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\util\file_types.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\trigger_editor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\editors.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\util\gason\gason.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\aoejson.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,6 +94,18 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="icon1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="bitmap1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\cond-good.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\effect-good.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\trig-on-good.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

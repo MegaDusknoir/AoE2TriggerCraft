@@ -4,11 +4,16 @@
 #include <sstream>
 #include <vector>
 #include "../aoe2scenario.h"
+#include "../util/gason/gason.h"
+#include "../util/utf8conv/utf8conv.h"
+#include "../aoejson.h"
 
 using namespace std;
 using namespace AoE2ScenarioNamespace;
 
 void test_fun();
+JsonAllocator json_alloc;
+JsonValue json_val;
 
 int main()
 {
@@ -22,6 +27,8 @@ const char save_path[] = "D:/Age of Empires/AoE2TriggerCraft/AoE2TriggerCraftCon
 
 void test_fun()
 {
+    AoEJsonData AoEString;
+    AoEJsonRead(AoEString).json_load("D:/Age of Empires/AoE2TriggerCraft/string.json");
     scen.open(scn_path);
     //scen.triggers->sort_by_order();
     AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct new_trig;

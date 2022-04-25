@@ -86,13 +86,15 @@ namespace AoE2ScenarioNamespace
         TriggerManager(AoE2ScenarioCurrent* scn) :scen(scn)
         {}
         TriggerStruct& operator[](size_t idx);
+        TriggerStruct& at(size_t idx);
         TriggerStructIdx size();
-        void add(const TriggerStruct& val);
-        void add(TriggerStruct&& val);
+        TriggerStructIdx add();
+        TriggerStructIdx add(const TriggerStruct& val);
+        TriggerStructIdx add(TriggerStruct&& val);
         void del(TriggerStructIdx to_del);
         void del(TriggerStructIdx to_del_begin, TriggerStructIdx n);
         void mov(TriggerStructIdx target, TriggerStructIdx idx_begin, TriggerStructIdx idx_end);
-        void copy_to_all(TriggerStructIdx to_copy, uint32_t mode);
+        TriggerStructIdx copy_to_all(TriggerStructIdx to_copy, uint32_t mode);
         void sort_by_order();
         void load();
         void confirm();

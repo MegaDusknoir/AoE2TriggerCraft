@@ -23,6 +23,10 @@ namespace AoE2ScenarioFileTypesNamespace
 	class bytes
 	{
 	public:
+		bytes()
+		{
+			memset(value, 0, n * sizeof(uint8_t)); 
+		}
 		uint8_t value[n];
 		uint8_t& operator[](size_t n)
 		{
@@ -38,8 +42,8 @@ namespace AoE2ScenarioFileTypesNamespace
 	class vStr
 	{
 	public:
-		vStr():length(0) {}
-		vStr(string& _s) :length(_s.size()), s(_s) {}
+		vStr() :length(1) { s += '\0'; }
+		vStr(string&& _s) :length(_s.size()), s(_s) {}
 		T length;
 		string s;
 		operator string()

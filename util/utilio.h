@@ -3,6 +3,22 @@
 #include <fstream>
 #include "libdeflate/libdeflate.h"
 
+template<class... T>
+std::string make_fmt_string(const char* fmt, const T... args)
+{
+	char buf[128];
+	sprintf(buf, fmt, args...);
+	return std::string(buf);
+}
+
+template<class... T>
+std::wstring make_fmt_string(const wchar_t* fmt, const T... args)
+{
+	wchar_t buf[128];
+	wsprintf(buf, fmt, args...);
+	return std::wstring(buf);
+}
+
 class DeflateClass
 {
 public:

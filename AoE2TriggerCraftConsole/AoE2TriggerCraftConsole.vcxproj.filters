@@ -27,6 +27,12 @@
     <ClCompile Include="..\util\utilio.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="..\util\gason\gason.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\aoejson.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\aoe2scenario.h">
@@ -46,6 +52,18 @@
     </ClInclude>
     <ClInclude Include="..\util\libdeflate\libdeflate.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\util\utf8conv\utf8conv.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\util\utf8conv\utf8except.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\util\gason\gason.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\aoejson.h">
+      <Filter>Parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

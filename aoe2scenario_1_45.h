@@ -697,6 +697,23 @@ namespace AoE2Scenario_1_45_Namespace
                 int32_t number_of_triggers;
                 struct TriggerStruct
                 {
+                    TriggerStruct()
+                        :enabled(1),
+                        looping(0),
+                        description_string_table_id(0),
+                        display_as_objective(0),
+                        objective_description_order(0),
+                        make_header(0),
+                        short_description_string_table_id(0),
+                        display_on_screen(0),
+                        unknown(),
+                        mute_objectives(0),
+                        trigger_description(),
+                        trigger_name(),
+                        short_description(),
+                        number_of_effects(0),
+                        number_of_conditions(0)
+                    {}
 					uint32_t enabled;                           //¿ªÆô
 					int8_t looping;                             //Ñ­»·
 					int32_t description_string_table_id;        //´¥·¢ÃèÊö×Ö´®ID

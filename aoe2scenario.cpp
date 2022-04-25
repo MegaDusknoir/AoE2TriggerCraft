@@ -163,19 +163,31 @@ namespace AoE2ScenarioNamespace
     {
         return scen->body.Triggers.trigger_data[list_by_order[idx]];
     }
+    TriggerStruct& TriggerManager::at(size_t idx)
+    {
+        return (*this)[idx];
+    }
     TriggerStructIdx TriggerManager::size()
     {
         return list_by_order.size();
     }
-    void TriggerManager::add(const TriggerStruct& val)
+    TriggerStructIdx TriggerManager::add()
+    {
+        scen->body.Triggers.trigger_data.push_back(TriggerStruct());
+        list_by_order.push_back(scen->body.Triggers.trigger_data.size() - 1);
+        return list_by_order.size() - 1;
+    }
+    TriggerStructIdx TriggerManager::add(const TriggerStruct& val)
     {
         scen->body.Triggers.trigger_data.push_back(val);
         list_by_order.push_back(scen->body.Triggers.trigger_data.size() - 1);
+        return list_by_order.size() - 1;
     }
-    void TriggerManager::add(TriggerStruct&& val)
+    TriggerStructIdx TriggerManager::add(TriggerStruct&& val)
     {
         scen->body.Triggers.trigger_data.push_back(std::move(val));
         list_by_order.push_back(scen->body.Triggers.trigger_data.size() - 1);
+        return list_by_order.size() - 1;
     }
     void TriggerManager::del(TriggerStructIdx to_del)
     {
@@ -368,7 +380,7 @@ namespace AoE2ScenarioNamespace
 		//	current_attr = base_player;
 		//}
 	}
-    void TriggerManager::copy_to_all(TriggerStructIdx to_copy, uint32_t mode)
+    TriggerStructIdx TriggerManager::copy_to_all(TriggerStructIdx to_copy, uint32_t mode)
     {
         int32_t base_player = 1;
         TriggerStructIdx old_size = list_by_order.size();
@@ -381,5 +393,7 @@ namespace AoE2ScenarioNamespace
             }
         }
         mov(to_copy + 1, old_size, list_by_order.size());
+        TriggerStructIdx added_cnt = list_by_order.size() - old_size;
+        return added_cnt;
     }
 }

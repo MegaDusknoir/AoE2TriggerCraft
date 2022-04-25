@@ -116,7 +116,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -132,7 +132,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -146,25 +146,37 @@
     <ClInclude Include="..\aoe2scenario.h" />
     <ClInclude Include="..\aoe2scenario_1_41.h" />
     <ClInclude Include="..\aoe2scenario_1_45.h" />
+    <ClInclude Include="..\util\gason\gason.h" />
     <ClInclude Include="..\util\libdeflate\libdeflate.h" />
+    <ClInclude Include="..\util\utf8conv\utf8conv.h" />
+    <ClInclude Include="..\util\utf8conv\utf8except.h" />
     <ClInclude Include="..\util\utilio.h" />
     <ClInclude Include="AoE2TCWin.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="view\editors.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\aoe2scenario.cpp" />
+    <ClCompile Include="..\aoejson.cpp" />
     <ClCompile Include="..\util\file_types.cpp" />
+    <ClCompile Include="..\util\gason\gason.cpp" />
     <ClCompile Include="..\util\utilio.cpp" />
     <ClCompile Include="AoE2TCWin.cpp" />
+    <ClCompile Include="view\editors.cpp" />
+    <ClCompile Include="view\trigger_editor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AoE2TCWin.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="AoE2TCWin.ico" />
+    <Image Include="bitmap1.bmp" />
     <Image Include="icon1.ico" />
+    <Image Include="res\cond-good.bmp" />
+    <Image Include="res\effect-good.bmp" />
+    <Image Include="res\trig-on-good.bmp" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>

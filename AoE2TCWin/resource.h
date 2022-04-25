@@ -26,8 +26,14 @@
 #define IDS_ALL_TYPE                    129
 #define IDD_TRIGGERS                    131
 #define IDD_UNITS                       132
-#define IDC_TREE1                       1007
+#define IDB_COND                        134
+#define IDB_CONDITION                   134
+#define IDB_EFFECT                      135
+#define IDB_TRIGGER                     136
 #define IDC_TRIGGER_TREE                1007
+#define IDC_ADD_TRIG                    1009
+#define IDC_DEL_TRIG                    1010
+#define IDC_COPY_TO_ALL                 1011
 #define ID_32771                        32771
 #define IDM_OPEN                        32772
 #define ID_32773                        32773
@@ -39,9 +45,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1008
+#define _APS_NEXT_CONTROL_VALUE         1010
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

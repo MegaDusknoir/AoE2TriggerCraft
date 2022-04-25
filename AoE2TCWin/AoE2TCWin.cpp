@@ -5,15 +5,15 @@ name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment (lib, "comctl32")
 
-#include <map>
 #include "framework.h"
 #include "AoE2TCWin.h"
-#include "D:\Age of Empires\AoE2TriggerCraft\aoe2scenario.h"
-
-#define MAX_LOADSTRING 100
+#include "../aoe2scenario.h"
+#include "view/editors.h"
+#include <map>
 
 using namespace AoE2ScenarioNamespace;
 AoE2Scenario Scen;
+AoEJsonData GameStr;
 
 WCHAR szScenName[MAX_LOADSTRING];
 // 全局变量:
@@ -22,7 +22,7 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
 HWND hBar;
 WCHAR szEditorWindowClass[MAX_LOADSTRING] = L"EditorWindowClass";
-HWND hEditor;
+HWND hEditor, hEditorSheet;
 WCHAR szViewerWindowClass[MAX_LOADSTRING] = L"ViewerWindowClass";
 HWND hViewer;
 WCHAR szInfoWindowClass[MAX_LOADSTRING] = L"InfoWindowClass";
@@ -60,11 +60,21 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 void OpenFile(HWND hWnd);
 void SaveFile(HWND hWnd);
 
+void GameDataJsonLoad(void)
+{
+    WCHAR szDir[512];
+    GetCurrentDirectory(512, szDir);
+    AoEJsonRead(GameStr).json_load((std::wstring(szDir) + L"/string.json").c_str());
+}
+
 LRESULT CALLBACK EditorWndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     LRESULT ret = 0;
     switch (msg)
     {
+    case TC_LOAD:
+        SendMessage((HWND)SendMessage(hEditorSheet, PSM_GETCURRENTPAGEHWND, 0, 0), TC_LOAD, 0, 0);
+        break;
     default:
         ret = DefWindowProc(window, msg, wParam, lParam);
     }
@@ -245,105 +255,6 @@ HWND CreateViewerWnd(HWND hParent)
 }
 
 
-#define EDITOR_SHEET_NUM_PAGES 2
-INT_PTR CALLBACK TrigDlgProc(HWND dialog, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch (uMsg)
-    {
-    case WM_INITDIALOG:
-        //TODO
-        break;
-    }
-
-    return 0;
-}
-
-DLGPROC procs[EDITOR_SHEET_NUM_PAGES] =
-{
-    &TrigDlgProc,
-    &TrigDlgProc,
-};
-const WORD PropSheetButtons[] =
-{ IDOK, IDCANCEL, IDHELP };
-
-int CALLBACK PropSheetProc(HWND sheet, UINT uMsg, LPARAM lParam)
-{
-    switch (uMsg)
-	{
-	case PSCB_PRECREATE:
-	{
-        RECT rect;
-        GetClientRect(hEditor, &rect);
-		DLGTEMPLATE* templ = (DLGTEMPLATE*)lParam;
-		//add a minimize box
-		templ->style |= WS_OVERLAPPED | WS_CHILD | WS_VISIBLE | WS_MAXIMIZE;
-        templ->style &= ~(WS_POPUP | WS_BORDER | DS_CENTER | DS_MODALFRAME | DS_3DLOOK | DS_ABSALIGN | WS_CAPTION | WS_DLGFRAME | WS_SYSMENU);
-        templ->x = (short)rect.left;
-        templ->y = (short)rect.top;
-        templ->cx = (short)rect.right;
-        templ->cy = (short)rect.bottom;
-	}
-        break;
-    case PSCB_INITIALIZED:
-    {
-        /* Remove unused buttons. */
-        for (int i = 0; i < sizeof(PropSheetButtons) / sizeof(WORD); i++)
-        {
-            HWND hWnd = GetDlgItem(sheet, PropSheetButtons[i]);
-            if (hWnd != NULL)
-            {
-                ShowWindow(hWnd, SW_HIDE);
-                EnableWindow(hWnd, FALSE);
-            }
-        }
-    }
-	    break;
-    default:
-        return 0;
-    }
-    return 0;
-}
-
-HWND MakeEditorSheet(HINSTANCE app)
-{
-    PROPSHEETHEADER header;
-    HPROPSHEETPAGE pages[EDITOR_SHEET_NUM_PAGES];
-    PROPSHEETPAGE pg;	//used to create each page
-    HWND sheet;
-
-    //create pages
-
-    pg.dwSize = sizeof(PROPSHEETPAGE);
-    pg.dwFlags = PSP_DEFAULT | PSP_HIDEHEADER;
-    pg.hInstance = app;
-
-    for (int i = 0; i < EDITOR_SHEET_NUM_PAGES; i++)
-    {
-        pg.pszTemplate = MAKEINTRESOURCE(IDD_TRIGGERS + i);	//template IDs are in display order
-        pg.pfnDlgProc = procs[i];
-        pg.lParam = 0;
-        pages[i] = CreatePropertySheetPage(&pg);
-    }
-
-    //create sheet
-
-    header.dwSize = sizeof(header);
-    header.dwFlags = PSH_MODELESS | PSH_USECALLBACK | PSH_NOMARGIN |
-        PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
-    header.hwndParent = hEditor;
-    header.hInstance = app;
-    header.pszCaption = szEditorWindowClass;
-    header.nPages = EDITOR_SHEET_NUM_PAGES;
-    header.nStartPage = 0;
-    header.phpage = pages;
-
-    header.pfnCallback = &PropSheetProc;
-
-    sheet = (HWND)PropertySheet(&header);
-
-    return sheet;
-}
-
 const wchar_t* getFilenameFromPath(const wchar_t* path)
 {
 	const wchar_t* ret;
@@ -377,6 +288,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // TODO: 在此处放置代码。
 
     // 初始化全局字符串
+    GameDataJsonLoad();
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_AOE2TCWIN, szWindowClass, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_FILE_TYPE, stMap, MAX_LOADSTRING);
@@ -490,7 +402,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
        return FALSE;
    }
-   MakeEditorSheet(hInstance);
+   hEditorSheet = MakeEditorSheet(hInstance);
    hBar = CreateWindow(STATUSCLASSNAME, stMap[IDS_WELCOME],
 	   WS_CHILD | WS_VISIBLE, 0, 0, 0, 0,
        hWnd, NULL, hInstance, NULL);
@@ -592,6 +504,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DROPFILES:
         ;
         break;
+    case TC_LOAD:
+    {
+        SendMessage(hEditor, TC_LOAD, 0, 0);
+        break;
+    }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -667,6 +584,7 @@ void OpenFile(HWND hWnd)
 									L"%s - %s", szTitle, szScenName);
                                 SetWindowText(hWnd, titleBuffer);
                                 SetWindowText(hBar, stMap[IDS_OPEN_SUCCESS]);
+                                SendMessage(hWnd, TC_LOAD, 0, 0);
                             }
                             catch (std::exception& ex)
                             {
