@@ -22,7 +22,8 @@ int main()
 }
 
 AoE2Scenario scen;
-const char scn_path[] = "D:/Age of Empires/AoE2TriggerCraft/AoE2TriggerCraftConsole/minato007.aoe2scenario";
+//const char scn_path[] = "D:/Age of Empires/AoE2TriggerCraft/AoE2TriggerCraftConsole/minato007.aoe2scenario";
+const char scn_path[] = "D:/Age of Empires/AoE2TriggerCraft/AoE2TriggerCraftConsole/Sample_scen.aoe2scenario";
 const char save_path[] = "D:/Age of Empires/AoE2TriggerCraft/AoE2TriggerCraftConsole/saveto_minato007.aoe2scenario";
 
 void test_fun()

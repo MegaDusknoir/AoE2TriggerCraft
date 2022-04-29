@@ -65,6 +65,9 @@
     <ClInclude Include="..\aoejson.h">
       <Filter>Parser</Filter>
     </ClInclude>
+    <ClInclude Include="..\aoe2scenario_1_46.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\util\libdeflate\libdeflatestatic.lib">

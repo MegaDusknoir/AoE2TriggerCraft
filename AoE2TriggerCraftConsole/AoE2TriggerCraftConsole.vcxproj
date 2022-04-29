@@ -151,6 +151,7 @@
     <ClInclude Include="..\aoe2scenario.h" />
     <ClInclude Include="..\aoe2scenario_1_41.h" />
     <ClInclude Include="..\aoe2scenario_1_45.h" />
+    <ClInclude Include="..\aoe2scenario_1_46.h" />
     <ClInclude Include="..\aoejson.h" />
     <ClInclude Include="..\util\file_types.h" />
     <ClInclude Include="..\util\gason\gason.h" />

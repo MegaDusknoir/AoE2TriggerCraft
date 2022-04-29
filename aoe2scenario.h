@@ -10,6 +10,7 @@
 #include "util/file_types.h"
 #include "aoe2scenario_1_41.h"
 #include "aoe2scenario_1_45.h"
+#include "aoe2scenario_1_46.h"
 #include "util/utilio.h"
 
 #define OID_ADD_TRIGGER 0
@@ -27,7 +28,8 @@ namespace AoE2ScenarioNamespace
     using namespace AoE2ScenarioFileTypesNamespace;
     using namespace AoE2Scenario_1_41_Namespace;
     using namespace AoE2Scenario_1_45_Namespace;
-    using AoE2ScenarioCurrent = AoE2Scenario_1_45;
+    using namespace AoE2Scenario_1_46_Namespace;
+    using AoE2ScenarioCurrent = AoE2Scenario_1_46;
     using struTrigger = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct;
 	using iterTrigger = vector<struTrigger>::iterator;
     using struTriggerOrder = uint32_t;
@@ -39,6 +41,7 @@ namespace AoE2ScenarioNamespace
     class AoE2Scenario
 	{
     private:
+        static constexpr char current_version[] = "1.46";
         void open(AutoFile& fin);
         void save(AutoFile& fout);
 	public:
@@ -54,7 +57,6 @@ namespace AoE2ScenarioNamespace
     private:
         deque<unique_ptr<BaseOperator>> operator_forward;
         deque<unique_ptr<BaseOperator>> operator_backward;
-        static constexpr char current_version[] = "1.45";
         static DeflateClass deflate;
         string file_path;
         void deflate_decompress(string& raw);
