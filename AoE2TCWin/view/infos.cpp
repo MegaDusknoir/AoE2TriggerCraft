@@ -1,25 +1,25 @@
 
 #include "../framework.h"
 #include "../AoE2TCWin.h"
-#include "editors.h"
+#include "infos.h"
 
-#define EDITOR_SHEET_NUM_PAGES 2
-LONG_PTR pEditorProc;
-static DLGPROC procs[EDITOR_SHEET_NUM_PAGES] =
+#define INFO_SHEET_NUM_PAGES 3
+static DLGPROC procs[INFO_SHEET_NUM_PAGES] =
 {
-    &TrigDlgProc,
-    &TrigDlgProc,
+    &TrigParamDlgProc,
+    &TrigParamDlgProc,
+    &TrigParamDlgProc,
 };
 const WORD PropSheetButtons[] = { IDOK, IDCANCEL, IDHELP };
 
-int CALLBACK EditorSheetProc(HWND sheet, UINT uMsg, LPARAM lParam)
+int CALLBACK InfoSheetProc(HWND sheet, UINT uMsg, LPARAM lParam)
 {
     switch (uMsg)
     {
     case PSCB_PRECREATE:
     {
         RECT rect;
-        GetClientRect(hEditor, &rect);
+        GetClientRect(hInfo, &rect);
         DLGTEMPLATE* templ = (DLGTEMPLATE*)lParam;
         templ->style |= WS_OVERLAPPED | WS_CHILD | WS_VISIBLE | WS_MAXIMIZE;
         templ->style &= ~(WS_POPUP | WS_BORDER | DS_CENTER | DS_MODALFRAME | DS_3DLOOK | DS_ABSALIGN | WS_CAPTION | WS_DLGFRAME | WS_SYSMENU);
@@ -49,25 +49,10 @@ int CALLBACK EditorSheetProc(HWND sheet, UINT uMsg, LPARAM lParam)
     return 0;
 }
 
-INT_PTR CALLBACK EditorProc(HWND sheet, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch (uMsg)
-    {
-    case TC_LOAD:
-        //SendMessage((HWND)SendMessage(sheet, PSM_GETCURRENTPAGEHWND, 0, 0), TC_LOAD, 0, 0);
-        SendMessage(PropSheet_IndexToHwnd(sheet, 0), TC_LOAD, 0, 0);
-        SendMessage(PropSheet_IndexToHwnd(sheet, 1), TC_LOAD, 0, 0);
-        break;
-    default:
-        return CallWindowProc((WNDPROC)pEditorProc, sheet, uMsg, wParam, lParam);
-    }
-    return 0;
-}
-
-HWND MakeEditorSheet(HINSTANCE app)
+HWND MakeInfoSheet(HINSTANCE app)
 {
     PROPSHEETHEADER header;
-    HPROPSHEETPAGE pages[EDITOR_SHEET_NUM_PAGES];
+    HPROPSHEETPAGE pages[INFO_SHEET_NUM_PAGES];
     PROPSHEETPAGE pg;	//used to create each page
     HWND sheet;
 
@@ -77,9 +62,9 @@ HWND MakeEditorSheet(HINSTANCE app)
     pg.dwFlags = PSP_DEFAULT | PSP_HIDEHEADER;
     pg.hInstance = app;
 
-    for (int i = 0; i < EDITOR_SHEET_NUM_PAGES; i++)
+    for (int i = 0; i < INFO_SHEET_NUM_PAGES; i++)
     {
-        pg.pszTemplate = MAKEINTRESOURCE(IDD_UNITS + i);	//template IDs are in display order
+        pg.pszTemplate = MAKEINTRESOURCE(IDD_PARAM_TRIGGER + i);	//template IDs are in display order
         pg.pfnDlgProc = procs[i];
         pg.lParam = 0;
         pages[i] = CreatePropertySheetPage(&pg);
@@ -90,18 +75,16 @@ HWND MakeEditorSheet(HINSTANCE app)
     header.dwSize = sizeof(header);
     header.dwFlags = PSH_MODELESS | PSH_USECALLBACK | PSH_NOMARGIN |
         PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
-    header.hwndParent = hEditor;
+    header.hwndParent = hInfo;
     header.hInstance = app;
-    header.pszCaption = szEditorWindowClass;
-    header.nPages = EDITOR_SHEET_NUM_PAGES;
-    header.nStartPage = 1;
+    header.pszCaption = szInfoWindowClass;
+    header.nPages = INFO_SHEET_NUM_PAGES;
+    header.nStartPage = 0;
     header.phpage = pages;
 
-    header.pfnCallback = &EditorSheetProc;
+    header.pfnCallback = &InfoSheetProc;
 
     sheet = (HWND)PropertySheet(&header);
-
-    pEditorProc = SetWindowLongPtr(sheet, DWLP_DLGPROC, (LONG_PTR)&EditorProc);
 
     return sheet;
 }

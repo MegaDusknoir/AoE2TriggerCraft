@@ -9,7 +9,8 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "AoE2TCWin.h"
 #include "../aoe2scenario.h"
 #include "view/editors.h"
-#include <map>
+#include "view/viewers.h"
+#include "view/infos.h"
 
 using namespace AoE2ScenarioNamespace;
 AoE2Scenario Scen;
@@ -24,32 +25,10 @@ HWND hBar;
 WCHAR szEditorWindowClass[MAX_LOADSTRING] = L"EditorWindowClass";
 HWND hEditor, hEditorSheet;
 WCHAR szViewerWindowClass[MAX_LOADSTRING] = L"ViewerWindowClass";
-HWND hViewer;
+HWND hViewer, hViewerSheet;
 WCHAR szInfoWindowClass[MAX_LOADSTRING] = L"InfoWindowClass";
-HWND hInfo;
+HWND hInfo, hInfoSheet;
 
-class StringMap
-{
-public:
-    void alloc(UINT uID, int cchBufferMax)
-    {
-        unique_ptr<WCHAR[]> sz(new WCHAR[cchBufferMax]);
-        map[uID] = std::move(sz);
-    }
-    WCHAR* operator[](UINT uID)
-    {
-        if (map.find(uID) != map.end())
-        {
-            return map[uID].get();
-        }
-        else
-        {
-            throw std::runtime_error("Invalid string index");
-        }
-    }
-private:
-    std::map<size_t, unique_ptr<WCHAR[]>> map;
-};
 StringMap stMap;
 
 // 此代码模块中包含的函数的前向声明:
@@ -59,6 +38,23 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 void OpenFile(HWND hWnd);
 void SaveFile(HWND hWnd);
+
+void StringMap::alloc(UINT uID, int cchBufferMax)
+{
+    std::unique_ptr<WCHAR[]> sz(new WCHAR[cchBufferMax]);
+    map[uID] = std::move(sz);
+}
+WCHAR* StringMap::operator[](UINT uID)
+{
+    if (map.find(uID) != map.end())
+    {
+        return map[uID].get();
+    }
+    else
+    {
+        throw std::runtime_error("Invalid string index");
+    }
+}
 
 void GameDataJsonLoad(void)
 {
@@ -73,7 +69,7 @@ LRESULT CALLBACK EditorWndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lPar
     switch (msg)
     {
     case TC_LOAD:
-        SendMessage((HWND)SendMessage(hEditorSheet, PSM_GETCURRENTPAGEHWND, 0, 0), TC_LOAD, 0, 0);
+        SendMessage(hEditorSheet, TC_LOAD, 0, 0);
         break;
     default:
         ret = DefWindowProc(window, msg, wParam, lParam);
@@ -118,7 +114,7 @@ HWND CreateEditorWnd(HWND hParent, int x)
     GetClientRect(hParent, &rect);
     HWND hEditor = CreateWindowEx(0, szEditorWindowClass, L"编辑器区",
         WS_OVERLAPPED | WS_BORDER | WS_CHILD | WS_VISIBLE,
-        0, 0, x, rect.bottom - rect.top,
+        0, 0, x, rect.bottom - rect.top - 22,
         hParent, nullptr, instance, nullptr);
 
     if (!hEditor)
@@ -135,6 +131,9 @@ LRESULT CALLBACK InfoWndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam
     LRESULT ret = 0;
     switch (msg)
     {
+    case TC_LOAD:
+        SendMessage(hInfoSheet, TC_LOAD, 0, 0);
+        break;
     default:
         ret = DefWindowProc(window, msg, wParam, lParam);
     }
@@ -180,7 +179,7 @@ HWND CreateInfoWnd(HWND hParent, int y)
     GetClientRect(hEditor, &rectEditor);
     HWND hInfo = CreateWindowEx(0, szInfoWindowClass, L"详细信息区",
         WS_OVERLAPPED | WS_BORDER | WS_CHILD | WS_VISIBLE,
-        rectEditor.right + 2, y, rect.right - (rectEditor.right + 2), rect.bottom - y,
+        rectEditor.right + 2, y, rect.right - (rectEditor.right + 2), rect.bottom - y - 22,
         hParent, nullptr, instance, nullptr);
 
     if (!hInfo)
@@ -196,6 +195,9 @@ LRESULT CALLBACK ViewerWndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lPar
     LRESULT ret = 0;
     switch (msg)
     {
+    case TC_LOAD:
+        SendMessage(hViewerSheet, TC_LOAD, 0, 0);
+        break;
     default:
         ret = DefWindowProc(window, msg, wParam, lParam);
     }
@@ -243,7 +245,7 @@ HWND CreateViewerWnd(HWND hParent)
     GetClientRect(hInfo, &rectInfo);
     HWND hViewer = CreateWindowEx(0, szViewerWindowClass, L"详细信息区",
         WS_OVERLAPPED | WS_BORDER | WS_CHILD | WS_VISIBLE,
-        rectEditor.right + 2, 0, rect.right - (rectEditor.right + 2), rect.bottom - (rectInfo.bottom + 2),
+        rectEditor.right + 2, 0, rect.right - (rectEditor.right + 2), rect.bottom - (rectInfo.bottom + 2) - 22,
         hParent, nullptr, instance, nullptr);
 
     if (!hViewer)
@@ -300,6 +302,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringMap(hInstance, IDS_OPEN_FAIL, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_WELCOME, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_OPEN_SUCCESS, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_ADD_TRIGGER, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_DEL_TRIGGER, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_TRIGGER_COPY_TO_ALL, stMap, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 执行应用程序初始化:
@@ -374,7 +379,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	   WS_CLIPCHILDREN | WS_OVERLAPPEDWINDOW & ~(WS_MAXIMIZEBOX | WS_THICKFRAME),            // Window style
 
 	   // Size and position
-	   CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+	   CW_USEDEFAULT, CW_USEDEFAULT, 1200, 800,
 
 	   nullptr,       // Parent window    
 	   nullptr,       // Menu
@@ -403,6 +408,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
        return FALSE;
    }
    hEditorSheet = MakeEditorSheet(hInstance);
+   hViewerSheet = MakeViewerSheet(hInstance);
+   hInfoSheet = MakeInfoSheet(hInstance);
    hBar = CreateWindow(STATUSCLASSNAME, stMap[IDS_WELCOME],
 	   WS_CHILD | WS_VISIBLE, 0, 0, 0, 0,
        hWnd, NULL, hInstance, NULL);
@@ -427,11 +434,11 @@ void OnSize(HWND hWnd)
         0,
         0,
         Editor_width,
-        rect.bottom - rect.top,
+        rect.bottom - rect.top - 22,
         TRUE);
     MoveWindow(hInfo,
         rectEditor.right + 2,
-        rect.bottom - Info_height,
+        rect.bottom - Info_height - 22,
         rect.right - (rectEditor.right + 2),
         Info_height,
         TRUE);
@@ -439,7 +446,7 @@ void OnSize(HWND hWnd)
         rectEditor.right + 2,
         0,
         rect.right - (rectEditor.right + 2),
-        rect.bottom - (rectInfo.bottom + 2),
+        rect.bottom - (rectInfo.bottom + 2) - 22,
         TRUE);
 }
 //
@@ -507,6 +514,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case TC_LOAD:
     {
         SendMessage(hEditor, TC_LOAD, 0, 0);
+        SendMessage(hViewer, TC_LOAD, 0, 0);
+        SendMessage(hInfo, TC_LOAD, 0, 0);
         break;
     }
     default:
@@ -655,4 +664,41 @@ void SaveFile(HWND hWnd)
         }
         CoUninitialize();
     }
+}
+
+HWND CreateToolTip(int toolID, HWND hDlg, PCTSTR pszText)
+{
+    if (!toolID || !hDlg || !pszText)
+    {
+        return FALSE;
+    }
+    // Get the window of the tool.
+    HWND hwndTool = GetDlgItem(hDlg, toolID);
+    HINSTANCE inst = GetModuleHandle(NULL);
+
+    // Create the tooltip. g_hInst is the global instance handle.
+    HWND hwndTip = CreateWindowEx(NULL, TOOLTIPS_CLASS, NULL,
+        WS_POPUP | TTS_ALWAYSTIP,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        hDlg, NULL,
+        inst, NULL);
+
+    if (!hwndTool || !hwndTip)
+    {
+        return (HWND)NULL;
+    }
+
+    WCHAR lpszText[32];
+    wcscpy(lpszText, pszText);
+    // Associate the tooltip with the tool.
+    TOOLINFO toolInfo = { 0 };
+    toolInfo.cbSize = sizeof(toolInfo);
+    toolInfo.hwnd = hDlg;
+    toolInfo.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+    toolInfo.uId = (UINT_PTR)hwndTool;
+    toolInfo.lpszText = lpszText;
+    SendMessage(hwndTip, TTM_ADDTOOL, 0, (LPARAM)&toolInfo);
+
+    return hwndTip;
 }

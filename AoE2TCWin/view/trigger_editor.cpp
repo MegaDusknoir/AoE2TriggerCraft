@@ -22,7 +22,7 @@ public:
         item = TreeView_GetNextItem(treeview, item, TVGN_NEXT);
         return *this;
     }
-    TreeItemIterator& operator++(int)
+    TreeItemIterator operator++(int)
     {
         auto ret = *this;
         item = TreeView_GetNextItem(treeview, item, TVGN_NEXT);
@@ -33,7 +33,7 @@ public:
         item = TreeView_GetNextItem(treeview, item, TVGN_PREVIOUS);
         return *this;
     }
-    TreeItemIterator& operator--(int)
+    TreeItemIterator operator--(int)
     {
         auto ret = *this;
         item = TreeView_GetNextItem(treeview, item, TVGN_PREVIOUS);
@@ -342,6 +342,11 @@ BOOL MakeTrigDlg(HWND dialog)
     treeview = GetDlgItem(dialog, IDC_TRIGGER_TREE);
     TreeView_SetImageList(treeview, il, TVSIL_NORMAL);
     SetWindowLong(treeview, GWL_STYLE, GetWindowLong(treeview, GWL_STYLE) | TVS_HASBUTTONS | TVS_HASLINES);
+
+    //SendMessage(GetDlgItem(dialog, IDC_ADD_TRIG), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)icon_trig);
+    CreateToolTip(IDC_ADD_TRIG, dialog, stMap[TIPS_ADD_TRIGGER]);
+    CreateToolTip(IDC_DEL_TRIG, dialog, stMap[TIPS_DEL_TRIGGER]);
+    CreateToolTip(IDC_COPY_TO_ALL, dialog, stMap[TIPS_TRIGGER_COPY_TO_ALL]);
 
     return TRUE;
 }

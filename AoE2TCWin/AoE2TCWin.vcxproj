@@ -125,6 +125,10 @@
       <AdditionalManifestDependencies>
       </AdditionalManifestDependencies>
     </Link>
+    <Manifest>
+      <AdditionalManifestFiles>
+      </AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -141,11 +145,27 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Manifest>
+      <AdditionalManifestFiles>%(AdditionalManifestFiles)</AdditionalManifestFiles>
+      <EnableDpiAwareness>false</EnableDpiAwareness>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>
+      </ResourceOutputFileName>
+    </ManifestResourceCompile>
+    <PostBuildEvent>
+      <Command>xcopy .\..\x64\Release\AoE2TCWin.exe .\..\dist\ /y
+xcopy .\string.json .\..\dist\ /y</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Generate dist...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\aoe2scenario.h" />
     <ClInclude Include="..\aoe2scenario_1_41.h" />
     <ClInclude Include="..\aoe2scenario_1_45.h" />
+    <ClInclude Include="..\aoe2scenario_1_46.h" />
     <ClInclude Include="..\util\gason\gason.h" />
     <ClInclude Include="..\util\libdeflate\libdeflate.h" />
     <ClInclude Include="..\util\utf8conv\utf8conv.h" />
@@ -156,6 +176,8 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="view\editors.h" />
+    <ClInclude Include="view\infos.h" />
+    <ClInclude Include="view\viewers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\aoe2scenario.cpp" />
@@ -165,7 +187,13 @@
     <ClCompile Include="..\util\utilio.cpp" />
     <ClCompile Include="AoE2TCWin.cpp" />
     <ClCompile Include="view\editors.cpp" />
+    <ClCompile Include="view\infos.cpp" />
+    <ClCompile Include="view\param_trigger.cpp" />
+    <ClCompile Include="view\viewer_sceninfo.cpp" />
     <ClCompile Include="view\trigger_editor.cpp" />
+    <ClCompile Include="view\viewers.cpp" />
+    <ClCompile Include="view\viewer_map.cpp" />
+    <ClCompile Include="view\viewer_player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AoE2TCWin.rc" />

@@ -55,6 +55,17 @@ namespace AoE2ScenarioFileTypesNamespace
 			}
 			return ret;
 		}
+		vStr& operator=(string&& rhs)
+		{
+			bool trail_zero = (!s.empty() && s.back() == '\0');
+			s = std::move(rhs);
+			if (trail_zero)
+			{
+				s.push_back('\0');
+			}
+			length = s.size();
+			return *this;
+		}
 		vStr& operator=(const string& rhs)
 		{
 			bool trail_zero = (!s.empty() && s.back() == '\0');
@@ -63,7 +74,7 @@ namespace AoE2ScenarioFileTypesNamespace
 			{
 				s.push_back('\0');
 			}
-			length = rhs.size();
+			length = s.size();
 			return *this;
 		}
 		vStr& operator+=(const string& rhs)
@@ -81,10 +92,51 @@ namespace AoE2ScenarioFileTypesNamespace
 			length += rhs.size();
 			return *this;
 		}
-		vStr& operator+(const string& rhs)
+		vStr operator+(const string& rhs)
 		{
 			vStr temp(s);
 			return temp += rhs;
+		}
+		string cr_to_crlf() const
+		{
+			string s_cr;
+			size_t pos = 0;
+			while (1)
+			{
+				size_t nxt = s.find('\r', pos);
+				if (nxt != s.npos)
+				{
+					s_cr.append(s.begin() + pos, s.begin() + nxt);
+					s_cr.append("\r\n");
+					pos = nxt + 1;
+				}
+				else
+				{
+					s_cr.append(s.begin() + pos, s.end());
+					break;
+				}
+			}
+			return s_cr;
+		}
+		void convert_from_crlf(const string src)
+		{
+			string s_cr;
+			size_t pos = 0;
+			while (1)
+			{
+				size_t nxt = src.find('\n', pos);
+				if (nxt != src.npos)
+				{
+					s_cr.append(src.begin() + pos, src.begin() + nxt);
+					pos = nxt + 1;
+				}
+				else
+				{
+					s_cr.append(src.begin() + pos, src.end());
+					break;
+				}
+			}
+			*this = std::move(s_cr);
 		}
 		void read(const char*& p_bin)
 		{

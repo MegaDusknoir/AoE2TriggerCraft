@@ -40,3 +40,5 @@
 **/Debug
 **/x64/Release
 **/x86/Release
+
+*.aoe2scenario

@@ -31,7 +31,34 @@
             "物体可视 (多人游戏)",
             "物体已行动",
             "条件分隔符",
-            "多人游戏 AI 信号"
+            "多人游戏 AI 信号",
+            "<条件 31>",
+            "<条件 32>",
+            "<条件 33>",
+            "<条件 34>",
+            "<条件 35>",
+            "<条件 36>",
+            "<条件 37>",
+            "<条件 38>",
+            "<条件 39>",
+            "<条件 40>",
+            "<条件 41>",
+            "<条件 42>",
+            "<条件 43>",
+            "<条件 44>",
+            "<条件 45>",
+            "<条件 46>",
+            "<条件 47>",
+            "<条件 48>",
+            "<条件 49>",
+            "<条件 50>",
+            "<条件 51>",
+            "<条件 52>",
+            "<条件 53>",
+            "建筑即贸易",
+            "显示定时器已触发",
+            "胜利定时器",
+            "条件合并"
         ],
         "effect_name": [
             "<无>",
@@ -106,7 +133,9 @@
             "确认多人游戏 AI 信号",
             "禁用物体选择",
             "启用物体选择",
-            "更改色调"
+            "更改色调",
+            "启用物体移除",
+            "禁用物体移除"
         ]
     },
     "en": {
@@ -141,7 +170,34 @@
             "Object Visible (Multiplayer)",
             "Object Has Action",
             "Condition Separator",
-            "Multiplayer AI Signal"
+            "Multiplayer AI Signal",
+            "<Condition 31>",
+            "<Condition 32>",
+            "<Condition 33>",
+            "<Condition 34>",
+            "<Condition 35>",
+            "<Condition 36>",
+            "<Condition 37>",
+            "<Condition 38>",
+            "<Condition 39>",
+            "<Condition 40>",
+            "<Condition 41>",
+            "<Condition 42>",
+            "<Condition 43>",
+            "<Condition 44>",
+            "<Condition 45>",
+            "<Condition 46>",
+            "<Condition 47>",
+            "<Condition 48>",
+            "<Condition 49>",
+            "<Condition 50>",
+            "<Condition 51>",
+            "<Condition 52>",
+            "<Condition 53>",
+            "Building Is Trading",
+            "Display Timer Triggered",
+            "Victory Timer",
+            "Condition Joiner"
         ],
         "effect_name": [
             "<None>",
@@ -216,7 +272,9 @@
             "Acknowledge Multiplayer AI Signal",
             "Disable Object Selection",
             "Enable Object Selection",
-            "Change Color Mood"
+            "Change Color Mood",
+            "Enable Object Deletion",
+            "Disable Object Deletion"
         ]
     }
 }

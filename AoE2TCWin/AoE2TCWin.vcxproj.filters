@@ -54,6 +54,15 @@
     <ClInclude Include="..\util\gason\gason.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="view\viewers.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="view\infos.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\aoe2scenario_1_46.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AoE2TCWin.cpp">
@@ -78,6 +87,24 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\aoejson.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\viewers.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\viewer_sceninfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\infos.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\param_trigger.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\viewer_map.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="view\viewer_player.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
