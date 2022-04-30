@@ -190,7 +190,7 @@ xcopy .\string.json .\..\dist\ /y</Command>
     <ClCompile Include="view\infos.cpp" />
     <ClCompile Include="view\param_trigger.cpp" />
     <ClCompile Include="view\viewer_sceninfo.cpp" />
-    <ClCompile Include="view\trigger_editor.cpp" />
+    <ClCompile Include="view\editor_trigger.cpp" />
     <ClCompile Include="view\viewers.cpp" />
     <ClCompile Include="view\viewer_map.cpp" />
     <ClCompile Include="view\viewer_player.cpp" />

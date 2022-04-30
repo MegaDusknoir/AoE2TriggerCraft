@@ -105,7 +105,7 @@
     <ClCompile Include="view\param_trigger.cpp">
       <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="view\trigger_editor.cpp">
+    <ClCompile Include="view\editor_trigger.cpp">
       <Filter>View</Filter>
     </ClCompile>
   </ItemGroup>
