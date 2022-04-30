@@ -16,7 +16,46 @@ public:
 private:
     HTREEITEM item;
     HWND const treeview;
+private:
+    TreeItemIterator& _increase(int operand)
+    {
+        assert(operand >= 0);
+        while (operand != 0 && item != nullptr)
+        {
+            item = TreeView_GetNextItem(treeview, item, TVGN_NEXT);
+            --operand;
+        }
+        return *this;
+    }
+    TreeItemIterator& _decrease(int operand)
+    {
+        assert(operand >= 0);
+        while (operand != 0 && item != nullptr)
+        {
+            item = TreeView_GetNextItem(treeview, item, TVGN_PREVIOUS);
+            --operand;
+        }
+        return *this;
+    }
 public:
+    TreeItemIterator& operator+=(int operand)
+    {
+        return operand >= 0 ? this->_increase(operand) : this->_decrease(operand);
+    }
+    TreeItemIterator& operator-=(int operand)
+    {
+        return operand >= 0 ? this->_decrease(operand) : this->_increase(operand);
+    }
+    TreeItemIterator operator+(int operand)
+    {
+        auto ret = *this;
+        return operand >= 0 ? ret._increase(operand) : ret._decrease(operand);
+    }
+    TreeItemIterator operator-(int operand)
+    {
+        auto ret = *this;
+        return operand >= 0 ? ret._decrease(operand) : ret._increase(operand);
+    }
     TreeItemIterator& operator++()
     {
         item = TreeView_GetNextItem(treeview, item, TVGN_NEXT);
@@ -38,6 +77,14 @@ public:
         auto ret = *this;
         item = TreeView_GetNextItem(treeview, item, TVGN_PREVIOUS);
         return ret;
+    }
+    bool operator!=(const TreeItemIterator& rhs)
+    {
+        return this->item != rhs.item || this->treeview != rhs.treeview;
+    }
+    bool operator==(const TreeItemIterator& rhs)
+    {
+        return !(*this != rhs);
     }
     operator HTREEITEM()
     {
@@ -152,20 +199,46 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
         {
         case IDC_ADD_TRIG:
         {
+            HTREEITEM new_trig;
             Scen.triggers->at(Scen.triggers->add()).trigger_name = win32::Utf16ToUtf8(make_fmt_string(L"Trigger %d", Scen.triggers->size()));
-            TreeAddTrig(treeview, Scen.triggers->size() - 1, TVI_LAST);
+            TreeItemIterator select(treeview);
+            if (select)
+            {
+                auto select_idx = GetItemParam(treeview, select);//Todo (check GetItemParam)
+                auto idx_end = Scen.triggers->size();
+                Scen.triggers->mov(select_idx + 1, idx_end - 1, idx_end);
+                auto to_iter = select;
+                while (++to_iter)
+                {
+                    SetItemParam(treeview, to_iter, GetItemParam(treeview, to_iter) + 1);
+                }
+                new_trig = TreeAddTrig(treeview, select_idx + 1, select);
+            }
+            else
+            {
+                new_trig = TreeAddTrig(treeview, Scen.triggers->size() - 1, TVI_LAST);
+            }
+            TreeView_Select(treeview, new_trig, TVGN_CARET);
+            SetFocus(treeview);
             break;
         }
         case IDC_DEL_TRIG:
         {
-            //HTREEITEM target = TreeView_GetNextItem(treeview, 0, TVGN_CARET);
-            //HTREEITEM next = TreeView_GetNextItem(treeview, target, TVGN_NEXT);
-            //TreeView_DeleteItem(treeview, target);
-            //TreeView_Select(treeview, next, TVGN_CARET);
-            //Todo
-            //Scen.triggers->at(GetItemParam(treeview, target));
-            //Scen.triggers->at(Scen.triggers->add());
-            //TreeAddTrig(treeview, Scen.triggers->size() - 1, TVI_LAST);
+            TreeItemIterator select(treeview);
+            if (select)
+            {
+                HTREEITEM next_trig = select + 1 ? select + 1 : select - 1;
+                auto select_idx = GetItemParam(treeview, select);//Todo (check GetItemParam)
+                Scen.triggers->del(select_idx);
+                auto to_iter = select;
+                while (++to_iter)
+                {
+                    SetItemParam(treeview, to_iter, GetItemParam(treeview, to_iter) - 1);
+                }
+                TreeView_DeleteItem(treeview, select);
+                TreeView_Select(treeview, next_trig, TVGN_CARET);
+                SetFocus(treeview);
+            }
             break;
         }
         case IDC_COPY_TO_ALL:
@@ -187,6 +260,7 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
                 {
                     SetItemParam(treeview, target, GetItemParam(treeview, target) + added_cnt);
                 } while (++target);
+                SetFocus(treeview);
             }
             break;
         }

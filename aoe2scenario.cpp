@@ -273,12 +273,13 @@ namespace AoE2ScenarioNamespace
     void TriggerManager::load()
     {
         auto& id_list = scen->body.Triggers.trigger_data;
-        auto& order_list = scen->body.Triggers.trigger_display_order_array;
-        list_by_order.resize(id_list.size());
-        for (TriggerStructIdx i = 0; i < order_list.size(); ++i)
-        {
-            list_by_order[order_list[i]] = i;
-        }
+        list_by_order = scen->body.Triggers.trigger_display_order_array;
+        // // I have misunderstood that, so actually it is equivalent to "trigger_display_order_array"
+        //list_by_order.resize(id_list.size());
+        //for (TriggerStructIdx i = 0; i < order_list.size(); ++i)
+        //{
+        //    list_by_order[order_list[i]] = i;
+        //}
     }
     void TriggerManager::confirm()
     {
@@ -314,13 +315,7 @@ namespace AoE2ScenarioNamespace
         }
         //generate new trigger_display_order_array, and refresh triggers number data
         auto& order_list = scen->body.Triggers.trigger_display_order_array;
-        vector<uint32_t> new_order_list;
-        new_order_list.resize(list_by_order.size());
-        for (size_t i = 0; i < list_by_order.size(); ++i)
-        {
-            new_order_list[list_by_order[i]] = i;
-        }
-        order_list = std::move(new_order_list);
+        order_list = list_by_order;
         scen->header.trigger_count = order_list.size();
         scen->body.Options.number_of_triggers = order_list.size();
         scen->body.Triggers.number_of_triggers = order_list.size();

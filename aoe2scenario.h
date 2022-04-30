@@ -82,7 +82,7 @@ namespace AoE2ScenarioNamespace
         using TriggerStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct;
         using TriggerStructIdx = uint32_t;
         AoE2ScenarioCurrent* scen;
-        vector<TriggerStructIdx> list_by_order;
+        vector<TriggerStructIdx> list_by_order; // I have misunderstood that, so actually this is equivalent to "trigger_display_order_array"
         vector<TriggerStructIdx> list_deleted;
     public:
         TriggerManager(AoE2ScenarioCurrent* scn) :scen(scn)
@@ -90,12 +90,16 @@ namespace AoE2ScenarioNamespace
         TriggerStruct& operator[](size_t idx);
         TriggerStruct& at(size_t idx);
         TriggerStructIdx size();
+        //push_back to vector and order
         TriggerStructIdx add();
         TriggerStructIdx add(const TriggerStruct& val);
         TriggerStructIdx add(TriggerStruct&& val);
+        //hold the vector, mark target deleted, erase the order
         void del(TriggerStructIdx to_del);
         void del(TriggerStructIdx to_del_begin, TriggerStructIdx n);
+        //hold the vector, change the order
         void mov(TriggerStructIdx target, TriggerStructIdx idx_begin, TriggerStructIdx idx_end);
+        //push_back to vector, move the order to target
         TriggerStructIdx copy_to_all(TriggerStructIdx to_copy, uint32_t mode);
         void sort_by_order();
         void load();

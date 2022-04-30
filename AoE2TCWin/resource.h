@@ -49,14 +49,29 @@
 #define IDC_INSTRUCTION                 1052
 #define IDC_TEXT_INSTRUCTION            1052
 #define IDC_TEXT_VERSION                1053
+#define IDC_EDIT6                       1053
 #define IDC_TEXT_TIMESTAMP              1054
 #define IDC_TEXT_AUTHOR                 1055
 #define IDC_TEXT_TRIGVERSION            1056
-#define IDC_RICHEDIT21                  1057
+#define IDC_EDIT1                       1066
+#define IDC_CHECK3                      1067
+#define IDC_CHECK4                      1068
+#define IDC_EDIT2                       1069
+#define IDC_CHECK7                      1070
+#define IDC_CHECK5                      1071
+#define IDC_CHECK6                      1072
+#define IDC_EDIT7                       1073
+#define IDC_CHECK8                      1074
 #define ID_32771                        32771
 #define IDM_OPEN                        32772
 #define ID_32773                        32773
 #define IDM_SAVE_TO                     32774
+#define ID_32775                        32775
+#define ID_32776                        32776
+#define ID_32777                        32777
+#define IDM_SAVE                        32778
+#define IDM_CLOSE                       32779
+#define IDM_NEW                         32780
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -65,8 +80,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        138
-#define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1058
+#define _APS_NEXT_COMMAND_VALUE         32781
+#define _APS_NEXT_CONTROL_VALUE         1073
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
