@@ -234,36 +234,48 @@ namespace AoE2ScenarioNamespace
 #endif
         //scenario data don't include trigger id value, so generate
         vector<TriggerStructIdx> old_id_list;
+        vector<TriggerStruct> new_trigger_data;
         old_id_list.resize(scen->body.Triggers.trigger_data.size());
+        new_trigger_data.reserve(scen->body.Triggers.trigger_data.size());
         for (size_t i = 0; i < old_id_list.size(); ++i)
         {
             old_id_list[i] = i;
         }
-        //swap trigger by display order
+        //reorder trigger vector by display order
         for (size_t i = 0; i < list_by_order.size(); ++i)
         {
-            if (list_by_order[i] != i)
-            {
-                std::swap(scen->body.Triggers.trigger_data[list_by_order[i]], scen->body.Triggers.trigger_data[i]);
-                std::swap(old_id_list[list_by_order[i]], old_id_list[i]);
-                list_by_order[i] = i;
-            }
+            new_trigger_data.push_back(std::move(scen->body.Triggers.trigger_data[list_by_order[i]]));
+            old_id_list[i] = list_by_order[i];
+            list_by_order[i] = i;
         }
-        //repoint old id call to new
-        for (TriggerStructIdx trig_idx = 0; trig_idx < list_by_order.size(); ++trig_idx)
+        //deleted trigger will be placed to the back
+        for (size_t i = list_by_order.size(); i < old_id_list.size(); ++i)
         {
-            for (size_t i = 0; i < old_id_list.size(); ++i)
+            new_trigger_data.push_back(std::move(scen->body.Triggers.trigger_data[list_deleted[i - list_by_order.size()]]));
+            old_id_list[i] = list_deleted[i - list_by_order.size()];
+            list_deleted[i - list_by_order.size()] = i;
+        }
+        scen->body.Triggers.trigger_data = std::move(new_trigger_data);
+        //repoint old id call to new
+        for (auto& trigger : scen->body.Triggers.trigger_data)
+        {
+            for (auto& effect : trigger.effect_data)
             {
-                if (old_id_list[i] != i)
+                if (effect.trigger_id != -1)
                 {
-                    trigger_repoint(scen->body.Triggers.trigger_data[trig_idx], old_id_list[i], i);
+                    for (size_t i = 0; i < old_id_list.size(); ++i)
+                    {
+                        if (effect.trigger_id == old_id_list[i])
+                        {
+                            if (old_id_list[i] != i)
+                            {
+                                effect.trigger_id = i;
+                            }
+                            break;
+                        }
+                    }
                 }
             }
-        }
-        //deleted trigger will be all swaped to the back, remap the delete list
-        for (size_t i = 0; i < list_deleted.size(); ++i)
-        {
-            list_deleted[i] = list_by_order.size() + i;
         }
 #ifndef NSPEEDTRACE
         auto t2 = clock();

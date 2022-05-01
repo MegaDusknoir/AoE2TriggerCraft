@@ -121,12 +121,6 @@
     <Image Include="AoE2TCWin.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="icon1.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="bitmap1.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="res\cond-good.bmp">
       <Filter>资源文件</Filter>
     </Image>
@@ -134,6 +128,18 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\trig-on-good.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\B_NEW_TRIG.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\B_DEL_TRIG.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\B_COPY_TO_ALL.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\B_SORT.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

@@ -264,6 +264,14 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
             }
             break;
         }
+        case IDC_SORT:
+        {
+            Scen.triggers->sort_by_order();
+            MessageBox(NULL,stMap[IDS_SORT_COMPLETE], stMap[TIPS_TRIGGER_SORT], NULL);
+            //TreeReset(treeview, true);
+            SetFocus(treeview);
+            break;
+        }
         default:
             break;
         }
@@ -417,10 +425,16 @@ BOOL MakeTrigDlg(HWND dialog)
     TreeView_SetImageList(treeview, il, TVSIL_NORMAL);
     SetWindowLong(treeview, GWL_STYLE, GetWindowLong(treeview, GWL_STYLE) | TVS_HASBUTTONS | TVS_HASLINES);
 
+    SendMessage(GetDlgItem(dialog, IDC_ADD_TRIG), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_NEW_TRIG)));
+    SendMessage(GetDlgItem(dialog, IDC_DEL_TRIG), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_DEL_TRIG)));
+    SendMessage(GetDlgItem(dialog, IDC_COPY_TO_ALL), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_COPY_TO_ALL)));
+    SendMessage(GetDlgItem(dialog, IDC_SORT), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_SORT)));
+
     //SendMessage(GetDlgItem(dialog, IDC_ADD_TRIG), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)icon_trig);
     CreateToolTip(IDC_ADD_TRIG, dialog, stMap[TIPS_ADD_TRIGGER]);
     CreateToolTip(IDC_DEL_TRIG, dialog, stMap[TIPS_DEL_TRIGGER]);
     CreateToolTip(IDC_COPY_TO_ALL, dialog, stMap[TIPS_TRIGGER_COPY_TO_ALL]);
+    CreateToolTip(IDC_SORT, dialog, stMap[TIPS_TRIGGER_SORT]);
 
     return TRUE;
 }

@@ -305,6 +305,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringMap(hInstance, TIPS_ADD_TRIGGER, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_DEL_TRIGGER, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_TRIGGER_COPY_TO_ALL, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_TRIGGER_SORT, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_SORT_COMPLETE, stMap, MAX_LOADSTRING);
+    
     MyRegisterClass(hInstance);
 
     // 执行应用程序初始化:

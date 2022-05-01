@@ -25,6 +25,8 @@
 #define TIPS_ADD_TRIGGER                116
 #define TIPS_DEL_TRIGGER                117
 #define TIPS_TRIGGER_COPY_TO_ALL        118
+#define TIPS_TRIGGER_SORT               119
+#define IDS_SORT_COMPLETE               120
 #define IDR_MAINFRAME                   128
 #define IDS_ALL_TYPE                    129
 #define IDD_UNITS                       131
@@ -40,10 +42,16 @@
 #define IDD_PARAM_TRIGGER               136
 #define IDD_PARAM_CONDITION             137
 #define IDD_PARAM_EFFECT                138
+#define IDI_ICON1                       139
+#define IDI_B_NEW_TRIG                  139
+#define IDI_B_DEL_TRIG                  142
+#define IDI_B_COPY_TO_ALL               143
+#define IDI_B_SORT                      144
 #define IDC_TRIGGER_TREE                1007
 #define IDC_ADD_TRIG                    1009
 #define IDC_DEL_TRIG                    1010
 #define IDC_COPY_TO_ALL                 1011
+#define IDC_SORT                        1012
 #define IDC_EDIT4                       1051
 #define IDC_EDIT5                       1052
 #define IDC_INSTRUCTION                 1052
@@ -79,7 +87,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        138
+#define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32781
 #define _APS_NEXT_CONTROL_VALUE         1073
 #define _APS_NEXT_SYMED_VALUE           110

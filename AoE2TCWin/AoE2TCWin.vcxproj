@@ -200,8 +200,10 @@ xcopy .\string.json .\..\dist\ /y</Command>
   </ItemGroup>
   <ItemGroup>
     <Image Include="AoE2TCWin.ico" />
-    <Image Include="bitmap1.bmp" />
-    <Image Include="icon1.ico" />
+    <Image Include="res\B_COPY_TO_ALL.ico" />
+    <Image Include="res\B_DEL_TRIG.ico" />
+    <Image Include="res\B_NEW_TRIG.ico" />
+    <Image Include="res\B_SORT.ico" />
     <Image Include="res\cond-good.bmp" />
     <Image Include="res\effect-good.bmp" />
     <Image Include="res\trig-on-good.bmp" />
