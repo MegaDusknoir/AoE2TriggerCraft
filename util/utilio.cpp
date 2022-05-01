@@ -69,3 +69,8 @@ std::fstream* AutoFile::operator->()
 {
 	return &_file;
 }
+
+std::fstream& AutoFile::operator*()
+{
+	return _file;
+}

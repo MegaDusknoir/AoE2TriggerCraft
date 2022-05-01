@@ -20,11 +20,15 @@ enum TC_MSG
 	TC_LOAD = WM_APP,
 	TC_SAVE,
 	TC_CLOSE,
+	TC_LOAD_PARAM,
 };
 
 extern StringMap stMap;
 extern AoEJsonData GameStr;
 extern AoE2ScenarioNamespace::AoE2Scenario Scen;
+extern HWND hEditor;
+extern HWND hViewer;
+extern HWND hInfo;
 
 HWND CreateToolTip(int toolID, HWND hDlg, PCTSTR pszText);
 

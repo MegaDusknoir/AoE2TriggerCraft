@@ -27,6 +27,7 @@
 #define TIPS_TRIGGER_COPY_TO_ALL        118
 #define TIPS_TRIGGER_SORT               119
 #define IDS_SORT_COMPLETE               120
+#define IDS_TEXT_TYPE                   121
 #define IDR_MAINFRAME                   128
 #define IDS_ALL_TYPE                    129
 #define IDD_UNITS                       131
@@ -53,23 +54,35 @@
 #define IDC_COPY_TO_ALL                 1011
 #define IDC_SORT                        1012
 #define IDC_EDIT4                       1051
+#define IDC_PT_DESC_STR                 1051
 #define IDC_EDIT5                       1052
 #define IDC_INSTRUCTION                 1052
 #define IDC_TEXT_INSTRUCTION            1052
+#define IDC_PT_ORDER                    1052
 #define IDC_TEXT_VERSION                1053
 #define IDC_EDIT6                       1053
+#define IDC_PT_SHORT_DESC_STR           1053
 #define IDC_TEXT_TIMESTAMP              1054
 #define IDC_TEXT_AUTHOR                 1055
 #define IDC_TEXT_TRIGVERSION            1056
 #define IDC_EDIT1                       1066
+#define IDC_PT_NAME                     1066
 #define IDC_CHECK3                      1067
+#define IDC_PT_ENABLE                   1067
 #define IDC_CHECK4                      1068
+#define IDC_PT_LOOP                     1068
 #define IDC_EDIT2                       1069
+#define IDC_PT_DESC                     1069
 #define IDC_CHECK7                      1070
+#define IDC_PT_AS_TITLE                 1070
 #define IDC_CHECK5                      1071
+#define IDC_PT_AS_OBJ                   1071
 #define IDC_CHECK6                      1072
+#define IDC_PT_ON_SCREEN                1072
 #define IDC_EDIT7                       1073
+#define IDC_PT_SHORT_DESC               1073
 #define IDC_CHECK8                      1074
+#define IDC_PT_MUTE                     1074
 #define ID_32771                        32771
 #define IDM_OPEN                        32772
 #define ID_32773                        32773
@@ -80,6 +93,10 @@
 #define IDM_SAVE                        32778
 #define IDM_CLOSE                       32779
 #define IDM_NEW                         32780
+#define ID_32781                        32781
+#define IDM_EXPORT_STRINGS              32782
+#define ID_32783                        32783
+#define IDM_IMPORT_STRINGS              32784
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -88,7 +105,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        145
-#define _APS_NEXT_COMMAND_VALUE         32781
+#define _APS_NEXT_COMMAND_VALUE         32785
 #define _APS_NEXT_CONTROL_VALUE         1073
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

@@ -39,6 +39,7 @@ public:
 	AutoFile(const wchar_t* filename, std::ios_base::openmode mode);
 	~AutoFile();
 
+	std::fstream& operator*();
 	std::fstream* operator->();
 
 private:

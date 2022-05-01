@@ -348,9 +348,9 @@ INT_PTR Handle_WM_NOTIFY(HWND dialog, NMHDR const* header)
         //   _ASSERT(false);
         //   break;
         //   */
-        //case TVN_SELCHANGED:
-        //	TrigTree_HandleSelChanged((NMTREEVIEW*)header, dialog);
-        //	break;
+    case TVN_SELCHANGED:
+        SendMessage(hInfo, TC_LOAD_PARAM, 0, ((NMTREEVIEW*)header)->itemNew.lParam);
+        break;
 
         //case TVN_KEYDOWN:
         //	TrigTree_HandleKeyDown(dialog, (LPNMTVKEYDOWN)header);

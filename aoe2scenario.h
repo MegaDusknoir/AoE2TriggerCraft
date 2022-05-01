@@ -37,6 +37,7 @@ namespace AoE2ScenarioNamespace
 
     class BaseOperator;
     class TriggerManager;
+    class TextIO;
 
     class AoE2Scenario
 	{
@@ -63,6 +64,7 @@ namespace AoE2ScenarioNamespace
         void deflate_compress(string& raw);
     public:
         unique_ptr<TriggerManager> triggers;
+        unique_ptr<TextIO> text_io;
         void undo(void);
         void redo(void);
         void trigger_count_check(void)
@@ -110,6 +112,27 @@ namespace AoE2ScenarioNamespace
         void change_player_judge(int32_t base_player, int32_t player, uint32_t mode, int32_t& current_attr);
         void del(vector<TriggerStructIdx>::iterator to_del);
         void mov(vector<TriggerStructIdx>::iterator target, vector<TriggerStructIdx>::iterator idx_begin, vector<TriggerStructIdx>::iterator idx_end);
+    };
+
+    class TextIO
+    {
+        AoE2ScenarioCurrent* scen;
+    public:
+        TextIO(AoE2ScenarioCurrent* scn) :scen(scn)
+        {}
+    public:
+        void fexport(const char* file_path);
+        void fexport(const wchar_t* file_path);
+        void fimport(const char* file_path);
+        void fimport(const wchar_t* file_path);
+    private:
+        static void print_strings(AoE2ScenarioCurrent& scen_content, AutoFile& fout);
+        static void get_strings(AoE2ScenarioCurrent& scen_content, AutoFile& fin);
+        static string string_escape(const string& src);
+        static string string_unescape(const string& src);
+        static void strout_check(const string& s, AutoFile& fout);
+        static string getline_to_str(AutoFile& fin);
+        template <typename T> static void strin_check(vStr<T>& s, AutoFile& fin);
     };
 
     //deprecated redo/undo operators, may update in the future

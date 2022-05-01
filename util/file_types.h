@@ -51,7 +51,7 @@ namespace AoE2ScenarioFileTypesNamespace
 			string ret = s;
 			if (!ret.empty() && ret.back() == '\0')
 			{
-				ret.push_back('\0');
+				ret.pop_back();
 			}
 			return ret;
 		}

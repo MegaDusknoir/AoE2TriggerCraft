@@ -4,6 +4,7 @@
 #include "infos.h"
 
 #define INFO_SHEET_NUM_PAGES 3
+LONG_PTR pInfoProc;
 static DLGPROC procs[INFO_SHEET_NUM_PAGES] =
 {
     &TrigParamDlgProc,
@@ -49,6 +50,25 @@ int CALLBACK InfoSheetProc(HWND sheet, UINT uMsg, LPARAM lParam)
     return 0;
 }
 
+INT_PTR CALLBACK InfoProc(HWND sheet, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case TC_LOAD:
+        //SendMessage((HWND)SendMessage(sheet, PSM_GETCURRENTPAGEHWND, 0, 0), TC_LOAD, 0, 0);
+        SendMessage(PropSheet_IndexToHwnd(sheet, 0), TC_LOAD, 0, 0);
+        SendMessage(PropSheet_IndexToHwnd(sheet, 1), TC_LOAD, 0, 0);
+        SendMessage(PropSheet_IndexToHwnd(sheet, 2), TC_LOAD, 0, 0);
+        break;
+    case TC_LOAD_PARAM:
+        SendMessage(PropSheet_IndexToHwnd(sheet, wParam), TC_LOAD_PARAM, 0, lParam);
+        break;
+    default:
+        return CallWindowProc((WNDPROC)pInfoProc, sheet, uMsg, wParam, lParam);
+    }
+    return 0;
+}
+
 HWND MakeInfoSheet(HINSTANCE app)
 {
     PROPSHEETHEADER header;
@@ -85,6 +105,8 @@ HWND MakeInfoSheet(HINSTANCE app)
     header.pfnCallback = &InfoSheetProc;
 
     sheet = (HWND)PropertySheet(&header);
+
+    pInfoProc = SetWindowLongPtr(sheet, DWLP_DLGPROC, (LONG_PTR)&InfoProc);
 
     return sheet;
 }

@@ -16,7 +16,9 @@ using namespace AoE2ScenarioNamespace;
 AoE2Scenario Scen;
 AoEJsonData GameStr;
 
-WCHAR szScenName[MAX_LOADSTRING];
+std::wstring ScenPath;
+std::wstring ScenName;
+
 // 全局变量:
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
@@ -36,8 +38,12 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-void OpenFile(HWND hWnd);
-void SaveFile(HWND hWnd);
+void OpenScen(HWND hWnd, PWSTR pszFilePath);
+void SaveScen(HWND hWnd, PWSTR pszFilePath);
+void ImportScenStr(HWND hWnd, PWSTR pszFilePath);
+void ExportScenStr(HWND hWnd, PWSTR pszFilePath);
+void OpenFile(HWND hWnd, std::initializer_list<COMDLG_FILTERSPEC> rgSaveTypes, void(*pathHandle)(HWND, PWSTR));
+void SaveFile(HWND hWnd, std::initializer_list<COMDLG_FILTERSPEC> rgSaveTypes, const WCHAR* saveFileName, void(*pathHandle)(HWND, PWSTR));
 
 void StringMap::alloc(UINT uID, int cchBufferMax)
 {
@@ -133,6 +139,9 @@ LRESULT CALLBACK InfoWndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam
     {
     case TC_LOAD:
         SendMessage(hInfoSheet, TC_LOAD, 0, 0);
+        break;
+    case TC_LOAD_PARAM:
+        SendMessage(hInfoSheet, TC_LOAD_PARAM, wParam, lParam);
         break;
     default:
         ret = DefWindowProc(window, msg, wParam, lParam);
@@ -295,6 +304,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_AOE2TCWIN, szWindowClass, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_FILE_TYPE, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_ALL_TYPE, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_TEXT_TYPE, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_OPEN, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_SAVE, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_SAVE_SUCCESS, stMap, MAX_LOADSTRING);
@@ -476,16 +486,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
 			case IDM_OPEN:
-				OpenFile(hWnd);
+                OpenFile(hWnd,
+                    {
+                        {stMap[IDS_FILE_TYPE], L"*.aoe2scenario"},
+                        {stMap[IDS_ALL_TYPE], L"*.*" },
+                    },
+                    OpenScen);
 				break;
 			case IDM_SAVE_TO:
-                if (wcslen(szScenName))
+                if (ScenName.empty() == false)
                 {
-                    SaveFile(hWnd);
+                    SaveFile(hWnd,
+                        {
+                            {stMap[IDS_FILE_TYPE], L"*.aoe2scenario"},
+                        },
+                        ScenName.c_str(),
+                        SaveScen);
                 }
                 break;
 			case IDM_EXIT:
                 DestroyWindow(hWnd);
+                break;
+            case IDM_IMPORT_STRINGS:
+                OpenFile(hWnd,
+                    {
+                        { stMap[IDS_TEXT_TYPE], L"*.txt"},
+                        { stMap[IDS_ALL_TYPE], L"*.*" },
+                    },
+                    ImportScenStr);
+                break;
+            case IDM_EXPORT_STRINGS:
+                SaveFile(hWnd,
+                    {
+                        { stMap[IDS_TEXT_TYPE], L"*.txt" },
+                        { stMap[IDS_ALL_TYPE], L"*.*" },
+                    },
+                    L"Export.txt",
+                    ExportScenStr);
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
@@ -547,7 +584,69 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-void OpenFile(HWND hWnd)
+void OpenScen(HWND hWnd, PWSTR pszFilePath)
+{
+    try
+    {
+        Scen.open(pszFilePath);
+        //MessageBox(NULL, pszFilePath, stMap[IDS_OPEN], MB_OK);
+        // set status bar text
+        ScenPath = pszFilePath;
+        ScenName = getFilenameFromPath(pszFilePath);
+        SetWindowText(hWnd, (std::wstring(szTitle) + L" - " + ScenName).c_str());
+        SetWindowText(hBar, stMap[IDS_OPEN_SUCCESS]);
+        SendMessage(hWnd, TC_LOAD, 0, 0);
+    }
+    catch (std::exception& ex)
+    {
+        MessageBox(NULL, stMap[IDS_OPEN_FAIL], stMap[IDS_OPEN], MB_ICONWARNING);
+        SetWindowText(hBar, stMap[IDS_OPEN_FAIL]);
+    }
+}
+
+void SaveScen(HWND hWnd, PWSTR pszFilePath)
+{
+    try
+    {
+        Scen.save(pszFilePath);
+        MessageBox(NULL, stMap[IDS_SAVE_SUCCESS], stMap[IDS_SAVE], MB_OK);
+    }
+    catch (std::exception& ex)
+    {
+        MessageBox(NULL, stMap[IDS_SAVE_FAIL], stMap[IDS_SAVE], MB_ICONWARNING);
+    }
+}
+
+void ImportScenStr(HWND hWnd, PWSTR pszFilePath)
+{
+    try
+    {
+        Scen.text_io->fimport(pszFilePath);
+        SetWindowText(hBar, stMap[IDS_OPEN_SUCCESS]);
+        SendMessage(hWnd, TC_LOAD, 0, 0);
+    }
+    catch (std::exception& ex)
+    {
+        MessageBox(NULL, stMap[IDS_OPEN_FAIL], stMap[IDS_OPEN], MB_ICONWARNING);
+        SetWindowText(hBar, stMap[IDS_OPEN_FAIL]);
+    }
+}
+
+void ExportScenStr(HWND hWnd, PWSTR pszFilePath)
+{
+    try
+    {
+        Scen.text_io->fexport(pszFilePath);
+        MessageBox(NULL, stMap[IDS_SAVE_SUCCESS], stMap[IDS_SAVE], MB_OK);
+    }
+    catch (std::exception& ex)
+    {
+        MessageBox(NULL, stMap[IDS_SAVE_FAIL], stMap[IDS_SAVE], MB_ICONWARNING);
+    }
+}
+
+//Create FileOpenDialog and handle path
+void OpenFile(HWND hWnd, std::initializer_list<COMDLG_FILTERSPEC> rgSaveTypes, void(*pathHandle)(HWND, PWSTR))
 {
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 		COINIT_DISABLE_OLE1DDE);
@@ -559,13 +658,7 @@ void OpenFile(HWND hWnd)
 		hr = pFileOpen.CoCreateInstance(__uuidof(FileOpenDialog));
 		if (SUCCEEDED(hr))
 		{
-            COMDLG_FILTERSPEC const rgOpenTypes[] =
-			{
-                { stMap[IDS_FILE_TYPE], L"*.aoe2scenario"},
-				{ stMap[IDS_ALL_TYPE], L"*.*" },
-            };
-
-            hr = pFileOpen->SetFileTypes(ARRAYSIZE(rgOpenTypes), rgOpenTypes);
+            hr = pFileOpen->SetFileTypes(rgSaveTypes.size(), rgSaveTypes.begin());
             if (SUCCEEDED(hr))
             {
                 // Show the Open dialog box.
@@ -584,25 +677,7 @@ void OpenFile(HWND hWnd)
                         // Display the file name to the user.
                         if (SUCCEEDED(hr))
                         {
-                            try
-                            {
-                                Scen.open(pszFilePath);
-                                //MessageBox(NULL, pszFilePath, stMap[IDS_OPEN], MB_OK);
-                                // set status bar text
-                                wchar_t titleBuffer[100];
-                                auto filename = getFilenameFromPath(pszFilePath);
-								wnsprintf(szScenName, sizeof(szScenName) / sizeof(wchar_t), L"%s", filename);
-								wnsprintf(titleBuffer, sizeof(titleBuffer) / sizeof(wchar_t),
-									L"%s - %s", szTitle, szScenName);
-                                SetWindowText(hWnd, titleBuffer);
-                                SetWindowText(hBar, stMap[IDS_OPEN_SUCCESS]);
-                                SendMessage(hWnd, TC_LOAD, 0, 0);
-                            }
-                            catch (std::exception& ex)
-                            {
-                                MessageBox(NULL, stMap[IDS_OPEN_FAIL], stMap[IDS_OPEN], MB_ICONWARNING);
-                                SetWindowText(hBar, stMap[IDS_OPEN_FAIL]);
-                            }
+                            pathHandle(hWnd, pszFilePath);
                             CoTaskMemFree(pszFilePath);
                         }
                     }
@@ -613,7 +688,8 @@ void OpenFile(HWND hWnd)
 	}
 }
 
-void SaveFile(HWND hWnd)
+//Create FileSaveDialog and handle path
+void SaveFile(HWND hWnd, std::initializer_list<COMDLG_FILTERSPEC> rgSaveTypes, const WCHAR* saveFileName, void(*pathHandle)(HWND, PWSTR))
 {
     HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
         COINIT_DISABLE_OLE1DDE);
@@ -625,41 +701,35 @@ void SaveFile(HWND hWnd)
         hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_INPROC, IID_PPV_ARGS(&pFileSave));
         if (SUCCEEDED(hr))
         {
-            hr = pFileSave->SetFileName(szScenName);
-            COMDLG_FILTERSPEC const rgSaveTypes[] =
-            {
-                { stMap[IDS_FILE_TYPE], L"*.aoe2scenario" },
-            };
-
-            hr = pFileSave->SetFileTypes(ARRAYSIZE(rgSaveTypes), rgSaveTypes);
+            hr = pFileSave->SetFileName(saveFileName);
             if (SUCCEEDED(hr))
             {
-                // Show the Open dialog box.
-                hr = pFileSave->Show(NULL);
-
-                // Get the file name from the dialog box.
+                hr = pFileSave->SetFileTypes(rgSaveTypes.size(), rgSaveTypes.begin());
                 if (SUCCEEDED(hr))
                 {
-                    CComPtr<IShellItem> pItem;
-                    hr = pFileSave->GetResult(&pItem);
+                    hr = pFileSave->SetDefaultExtension(L"");
                     if (SUCCEEDED(hr))
                     {
-                        PWSTR pszFilePath;
-                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-                        
-                        // Display the file name to the user.
+                        // Show the Open dialog box.
+                        hr = pFileSave->Show(NULL);
+
+                        // Get the file name from the dialog box.
                         if (SUCCEEDED(hr))
                         {
-                            try
+                            CComPtr<IShellItem> pItem;
+                            hr = pFileSave->GetResult(&pItem);
+                            if (SUCCEEDED(hr))
                             {
-                                Scen.save(pszFilePath);
-                                MessageBox(NULL, stMap[IDS_SAVE_SUCCESS], stMap[IDS_SAVE], MB_OK);
+                                PWSTR pszFilePath;
+                                hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+                                // Display the file name to the user.
+                                if (SUCCEEDED(hr))
+                                {
+                                    pathHandle(hWnd, pszFilePath);
+                                    CoTaskMemFree(pszFilePath);
+                                }
                             }
-                            catch (std::exception& ex)
-                            {
-                                MessageBox(NULL, stMap[IDS_SAVE_FAIL], stMap[IDS_SAVE], MB_ICONWARNING);
-                            }
-                            CoTaskMemFree(pszFilePath);
                         }
                     }
                 }

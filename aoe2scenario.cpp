@@ -5,19 +5,19 @@ namespace AoE2ScenarioNamespace
 {
     DeflateClass AoE2Scenario::deflate;
     AoE2Scenario::AoE2Scenario()
-        :triggers(new TriggerManager(&this->scen))
+        :triggers(new TriggerManager(&this->scen)), text_io(new TextIO(&this->scen))
     {
     }
     AoE2Scenario::~AoE2Scenario()
     {
     }
     AoE2Scenario::AoE2Scenario(const char* file_path)
-        :triggers(new TriggerManager(&this->scen))
+        :triggers(new TriggerManager(&this->scen)), text_io(new TextIO(&this->scen))
     {
         open(file_path);
     }
     AoE2Scenario::AoE2Scenario(const wchar_t* file_path)
-        : triggers(new TriggerManager(&this->scen))
+        : triggers(new TriggerManager(&this->scen)), text_io(new TextIO(&this->scen))
     {
         open(file_path);
     }
@@ -402,5 +402,214 @@ namespace AoE2ScenarioNamespace
         mov(to_copy + 1, old_size, list_by_order.size());
         TriggerStructIdx added_cnt = list_by_order.size() - old_size;
         return added_cnt;
+    }
+
+    string TextIO::string_escape(const string& src)
+    {
+        string dst;
+        dst.reserve(src.size());
+        for (auto i = src.begin(); i != src.end(); ++i)
+        {
+            switch (*i)
+            {
+            case '\r': dst += "\\r"; break;
+            case '\n': dst += "\\n"; break;
+            case '\t': dst += "\\t"; break;
+            case '\\': dst += "\\\\"; break;
+            default: dst.push_back(*i); break;
+            }
+        }
+        return dst;
+    }
+    string TextIO::string_unescape(const string& src)
+    {
+        string dst;
+        dst.reserve(src.size());
+        for (auto i = src.begin(); i != src.end(); ++i)
+        {
+            if (*i == '\\')
+            {
+                ++i;
+                if (i != src.end())
+                {
+                    switch (*i)
+                    {
+                    case 'r': dst.push_back('\r'); break;
+                    case 'n': dst.push_back('\n'); break;
+                    case 't': dst.push_back('\t'); break;
+                    case '\\': dst.push_back('\\'); break;
+                    }
+                }
+            }
+            else
+            {
+                dst.push_back(*i);
+            }
+        }
+        return dst;
+    }
+    void TextIO::strout_check(const string& s, AutoFile& fout)
+    {
+        if (s.empty() == false && s[0] != '\0')
+        {
+            *fout << s << std::endl;
+        }
+    }
+    void TextIO::print_strings(AoE2ScenarioCurrent& scen_content, AutoFile& fout)
+    {
+        strout_check(string_escape(scen_content.header.scenario_instructions), fout);
+        strout_check(string_escape(scen_content.header.creator_name), fout);
+        strout_check(string_escape(scen_content.body.DataHeader.filename), fout);
+        strout_check(string_escape(scen_content.body.Messages.instructions), fout);
+        strout_check(string_escape(scen_content.body.Messages.hints), fout);
+        strout_check(string_escape(scen_content.body.Messages.victory), fout);
+        strout_check(string_escape(scen_content.body.Messages.loss), fout);
+        strout_check(string_escape(scen_content.body.Messages.history), fout);
+        strout_check(string_escape(scen_content.body.Messages.scouts), fout);
+        strout_check(string_escape(scen_content.body.Cinematics.PregameCinemaFilename), fout);
+        strout_check(string_escape(scen_content.body.Cinematics.VictoryCinemaFilename), fout);
+        strout_check(string_escape(scen_content.body.Cinematics.LossCinemaFilename), fout);
+        strout_check(string_escape(scen_content.body.BackgroundImage.filename), fout);
+        for (auto& str : scen_content.body.PlayerDataTwo.strings)
+        {
+            strout_check(string_escape(str), fout);
+        }
+        for (auto& ai_name : scen_content.body.PlayerDataTwo.ai_names)
+        {
+            strout_check(string_escape(ai_name), fout);
+        }
+        for (auto& ai_file : scen_content.body.PlayerDataTwo.ai_files)
+        {
+            strout_check(string_escape(ai_file.ai_per_file_text), fout);
+        }
+        strout_check(string_escape(scen_content.body.Map.water_definition), fout);
+        strout_check(string_escape(scen_content.body.Map.map_color_mood), fout);
+        strout_check(string_escape(scen_content.body.Map.script_name), fout);
+        for (auto& player : scen_content.body.Units.player_data_3)
+        {
+            strout_check(string_escape(player.constant_name), fout);
+        }
+        for (auto& trigger : scen_content.body.Triggers.trigger_data)
+        {
+            strout_check(string_escape(trigger.trigger_description), fout);
+            strout_check(string_escape(trigger.trigger_name), fout);
+            strout_check(string_escape(trigger.short_description), fout);
+            for (auto& effect : trigger.effect_data)
+            {
+                strout_check(string_escape(effect.message), fout);
+                strout_check(string_escape(effect.sound_name), fout);
+            }
+            for (auto& condition : trigger.condition_data)
+            {
+                strout_check(string_escape(condition.xs_function), fout);
+            }
+        }
+        for (auto& variable : scen_content.body.Triggers.variable_data)
+        {
+            strout_check(string_escape(variable.variable_name), fout);
+        }
+        strout_check(string_escape(scen_content.body.Files.script_file_path), fout);
+        strout_check(string_escape(scen_content.body.Files.script_file_content), fout);
+        for (auto& ai_file : scen_content.body.Files.ai_files)
+        {
+            strout_check(string_escape(ai_file.ai_file_name), fout);
+            strout_check(string_escape(ai_file.ai_file), fout);
+        }
+    }
+
+    string TextIO::getline_to_str(AutoFile& fin)
+    {
+        string s;
+        getline(*fin, s);
+        return s;
+    }
+    template <typename T> void TextIO::strin_check(vStr<T>& s, AutoFile& fin)
+    {
+        if (s.s.empty() == false && s.s[0] != '\0')
+        {
+            s = string_unescape(getline_to_str(fin));
+        }
+    }
+
+    void TextIO::get_strings(AoE2ScenarioCurrent& scen_content, AutoFile& fin)
+    {
+        strin_check(scen_content.header.scenario_instructions, fin);
+        strin_check(scen_content.header.creator_name, fin);
+        strin_check(scen_content.body.DataHeader.filename, fin);
+        strin_check(scen_content.body.Messages.instructions, fin);
+        strin_check(scen_content.body.Messages.hints, fin);
+        strin_check(scen_content.body.Messages.victory, fin);
+        strin_check(scen_content.body.Messages.loss, fin);
+        strin_check(scen_content.body.Messages.history, fin);
+        strin_check(scen_content.body.Messages.scouts, fin);
+        strin_check(scen_content.body.Cinematics.PregameCinemaFilename, fin);
+        strin_check(scen_content.body.Cinematics.VictoryCinemaFilename, fin);
+        strin_check(scen_content.body.Cinematics.LossCinemaFilename, fin);
+        strin_check(scen_content.body.BackgroundImage.filename, fin);
+        for (auto& str : scen_content.body.PlayerDataTwo.strings)
+        {
+            strin_check(str, fin);
+        }
+        for (auto& ai_name : scen_content.body.PlayerDataTwo.ai_names)
+        {
+            strin_check(ai_name, fin);
+        }
+        for (auto& ai_file : scen_content.body.PlayerDataTwo.ai_files)
+        {
+            strin_check(ai_file.ai_per_file_text, fin);
+        }
+        strin_check(scen_content.body.Map.water_definition, fin);
+        strin_check(scen_content.body.Map.map_color_mood, fin);
+        strin_check(scen_content.body.Map.script_name, fin);
+        for (auto& player : scen_content.body.Units.player_data_3)
+        {
+            strin_check(player.constant_name, fin);
+        }
+        for (auto& trigger : scen_content.body.Triggers.trigger_data)
+        {
+            strin_check(trigger.trigger_description, fin);
+            strin_check(trigger.trigger_name, fin);
+            strin_check(trigger.short_description, fin);
+            for (auto& effect : trigger.effect_data)
+            {
+                strin_check(effect.message, fin);
+                strin_check(effect.sound_name, fin);
+            }
+            for (auto& condition : trigger.condition_data)
+            {
+                strin_check(condition.xs_function, fin);
+            }
+        }
+        for (auto& variable : scen_content.body.Triggers.variable_data)
+        {
+            strin_check(variable.variable_name, fin);
+        }
+        strin_check(scen_content.body.Files.script_file_path, fin);
+        strin_check(scen_content.body.Files.script_file_content, fin);
+        for (auto& ai_file : scen_content.body.Files.ai_files)
+        {
+            strin_check(ai_file.ai_file_name, fin);
+            strin_check(ai_file.ai_file, fin);
+        }
+    }
+    void TextIO::fexport(const char* file_path)
+    {
+        AutoFile fout(file_path, ios::out);
+        print_strings(*scen, fout);
+    }
+    void TextIO::fexport(const wchar_t* file_path)
+    {
+        AutoFile fout(file_path, ios::out);
+        print_strings(*scen, fout);
+    }
+    void TextIO::fimport(const char* file_path)
+    {
+        AutoFile fin(file_path, ios::in);
+        get_strings(*scen, fin);
+    }
+    void TextIO::fimport(const wchar_t* file_path)
+    {
+        AutoFile fin(file_path, ios::in);
+        get_strings(*scen, fin);
     }
 }

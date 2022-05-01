@@ -142,22 +142,31 @@ namespace AoE2Scenario_1_46_Namespace
             struct MessagesStruct
             {
                 uint32_t string_tables[6];
-                str16 ascii_messages[6];
+                str16 instructions;
+                str16 hints;
+                str16 victory;
+                str16 loss;
+                str16 history;
+                str16 scouts;
                 void read(const char*& p_bin)
                 {
                     data_read(string_tables, p_bin);
-                    for (size_t i = 0; i < 6; ++i)
-                    {
-                        ascii_messages[i].read(p_bin);
-                    }
+                    instructions.read(p_bin);
+                    hints.read(p_bin);
+                    victory.read(p_bin);
+                    loss.read(p_bin);
+                    history.read(p_bin);
+                    scouts.read(p_bin);
                 }
                 void write(char*& p_bin) const
                 {
                     data_write(string_tables, p_bin);
-                    for (size_t i = 0; i < 6; ++i)
-                    {
-                        ascii_messages[i].write(p_bin);
-                    }
+                    instructions.write(p_bin);
+                    hints.write(p_bin);
+                    victory.write(p_bin);
+                    loss.write(p_bin);
+                    history.write(p_bin);
+                    scouts.write(p_bin);
                 }
             } Messages;
             /* Cinematics */
