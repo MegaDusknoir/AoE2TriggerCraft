@@ -24,10 +24,12 @@
 #define IDS_OPEN_SUCCESS                115
 #define TIPS_ADD_TRIGGER                116
 #define TIPS_DEL_TRIGGER                117
+#define TIPS_DEL_TREEITEM               117
 #define TIPS_TRIGGER_COPY_TO_ALL        118
 #define TIPS_TRIGGER_SORT               119
 #define IDS_SORT_COMPLETE               120
 #define IDS_TEXT_TYPE                   121
+#define IDS_NAME_NEW_TRIGGER            122
 #define IDR_MAINFRAME                   128
 #define IDS_ALL_TYPE                    129
 #define IDD_UNITS                       131

@@ -23,6 +23,23 @@ enum TC_MSG
 	TC_LOAD_PARAM,
 };
 
+class ItemData
+{
+public:
+    enum DataType
+    {
+        NONE,
+        TRIGGER,
+        CONDITION,
+        EFFECT,
+    };
+
+    ItemData(DataType type, uint32_t index) :type(type), idx(index)
+    {}
+    DataType type;
+    uint32_t idx;
+};
+
 extern StringMap stMap;
 extern AoEJsonData GameStr;
 extern AoE2ScenarioNamespace::AoE2Scenario Scen;

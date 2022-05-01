@@ -4,6 +4,11 @@
 #include "infos.h"
 
 #define INFO_SHEET_NUM_PAGES 3
+
+#define SHEET_TRIGGER 0
+#define SHEET_CONDITION 1
+#define SHEET_EFFECT 2
+
 LONG_PTR pInfoProc;
 static DLGPROC procs[INFO_SHEET_NUM_PAGES] =
 {
@@ -56,12 +61,25 @@ INT_PTR CALLBACK InfoProc(HWND sheet, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
     case TC_LOAD:
         //SendMessage((HWND)SendMessage(sheet, PSM_GETCURRENTPAGEHWND, 0, 0), TC_LOAD, 0, 0);
-        SendMessage(PropSheet_IndexToHwnd(sheet, 0), TC_LOAD, 0, 0);
-        SendMessage(PropSheet_IndexToHwnd(sheet, 1), TC_LOAD, 0, 0);
-        SendMessage(PropSheet_IndexToHwnd(sheet, 2), TC_LOAD, 0, 0);
+        SendMessage(PropSheet_IndexToHwnd(sheet, SHEET_TRIGGER), TC_LOAD, 0, 0);
+        SendMessage(PropSheet_IndexToHwnd(sheet, SHEET_CONDITION), TC_LOAD, 0, 0);
+        SendMessage(PropSheet_IndexToHwnd(sheet, SHEET_EFFECT), TC_LOAD, 0, 0);
         break;
     case TC_LOAD_PARAM:
-        SendMessage(PropSheet_IndexToHwnd(sheet, wParam), TC_LOAD_PARAM, 0, lParam);
+        switch (((ItemData*)lParam)->type)
+        {
+        case ItemData::TRIGGER:
+            SendMessage(PropSheet_IndexToHwnd(sheet, SHEET_TRIGGER), TC_LOAD_PARAM, 0, lParam);
+            break;
+        case ItemData::CONDITION:
+            SendMessage(PropSheet_IndexToHwnd(sheet, SHEET_CONDITION), TC_LOAD_PARAM, 0, lParam);
+            break;
+        case ItemData::EFFECT:
+            SendMessage(PropSheet_IndexToHwnd(sheet, SHEET_EFFECT), TC_LOAD_PARAM, 0, lParam);
+            break;
+        default:
+            break;
+        }
         break;
     default:
         return CallWindowProc((WNDPROC)pInfoProc, sheet, uMsg, wParam, lParam);

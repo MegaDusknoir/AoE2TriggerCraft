@@ -141,7 +141,7 @@ LRESULT CALLBACK InfoWndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam
         SendMessage(hInfoSheet, TC_LOAD, 0, 0);
         break;
     case TC_LOAD_PARAM:
-        SendMessage(hInfoSheet, TC_LOAD_PARAM, wParam, lParam);
+        SendMessage(hInfoSheet, TC_LOAD_PARAM, 0, lParam);
         break;
     default:
         ret = DefWindowProc(window, msg, wParam, lParam);
@@ -313,10 +313,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringMap(hInstance, IDS_WELCOME, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_OPEN_SUCCESS, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_ADD_TRIGGER, stMap, MAX_LOADSTRING);
-    LoadStringMap(hInstance, TIPS_DEL_TRIGGER, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_DEL_TREEITEM, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_TRIGGER_COPY_TO_ALL, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_TRIGGER_SORT, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_SORT_COMPLETE, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_NAME_NEW_TRIGGER, stMap, MAX_LOADSTRING);
     
     MyRegisterClass(hInstance);
 

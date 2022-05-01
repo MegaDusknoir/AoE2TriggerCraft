@@ -38,6 +38,39 @@ private:
         return *this;
     }
 public:
+    TreeItemIterator& parent()
+    {
+        item = TreeView_GetNextItem(treeview, item, TVGN_PARENT);
+        return *this;
+    }
+    TreeItemIterator& child()
+    {
+        item = TreeView_GetNextItem(treeview, item, TVGN_CHILD);
+        return *this;
+    }
+    TreeItemIterator get_parent()
+    {
+        TreeItemIterator ret(treeview, TreeView_GetNextItem(treeview, item, TVGN_PARENT));
+        return ret;
+    }
+    TreeItemIterator get_child()
+    {
+        TreeItemIterator ret(treeview, TreeView_GetNextItem(treeview, item, TVGN_CHILD));
+        return ret;
+    }
+    LPARAM lparam()
+    {
+        TVITEM tvitem;
+
+        tvitem.mask = TVIF_HANDLE | TVIF_PARAM;
+        tvitem.hItem = item ? item : TreeView_GetNextItem(treeview, NULL, TVGN_CARET);
+        tvitem.lParam = NULL;
+
+        if (tvitem.hItem)	//TVM_GETITIEM does NOT have NULL-protection
+            TreeView_GetItem(treeview, &tvitem);
+
+        return tvitem.lParam;
+    }
     TreeItemIterator& operator+=(int operand)
     {
         return operand >= 0 ? this->_increase(operand) : this->_decrease(operand);
@@ -105,7 +138,7 @@ HTREEITEM TreeAddTrig(HWND treeview, uint32_t index, HTREEITEM after)
     /* First add the trigger node. */
     std::wstring trig_name(win32::Utf8ToUtf16(trig.trigger_name) + L'\0');
     tvis.hParent = TVI_ROOT;
-    tvis.item.lParam = index;
+    tvis.item.lParam = (LPARAM)new ItemData(ItemData::TRIGGER, index);
     tvis.item.pszText = &trig_name[0];		//use TVN_GETDISPINFO.
     tvis.item.iImage = 0;
     tvis.item.iSelectedImage = 0;
@@ -117,6 +150,7 @@ HTREEITEM TreeAddTrig(HWND treeview, uint32_t index, HTREEITEM after)
     for (size_t i = 0; i != trig.condition_data.size(); ++i)
     {
         std::wstring name(GameStr.condition_name[trig.condition_data[i].condition_type]);
+        tvis.item.lParam = (LPARAM)new ItemData(ItemData::CONDITION, i);
         tvis.item.pszText = &name[0];
         tvis.item.iImage = 1;
         tvis.item.iSelectedImage = 1;
@@ -125,6 +159,7 @@ HTREEITEM TreeAddTrig(HWND treeview, uint32_t index, HTREEITEM after)
     for (size_t i = 0; i != trig.effect_data.size(); ++i)
     {
         std::wstring name(GameStr.effect_name[trig.effect_data[i].effect_type]);
+        tvis.item.lParam = (LPARAM)new ItemData(ItemData::EFFECT, i);
         tvis.item.pszText = &name[0];
         tvis.item.iImage = 2;
         tvis.item.iSelectedImage = 2;
@@ -154,34 +189,6 @@ void TreeReset(HWND treeview, bool refresh)
     }
 }
 
-LPARAM GetItemParam(HWND treeview, HTREEITEM which)
-{
-    TVITEM item;
-
-    item.mask = TVIF_HANDLE | TVIF_PARAM;
-    item.hItem = which ? which : TreeView_GetNextItem(treeview, NULL, TVGN_CARET);
-    item.lParam = 0; //why was -1?
-
-    if (item.hItem)	//TVM_GETITIEM does NOT have NULL-protection
-        TreeView_GetItem(treeview, &item);
-
-    return item.lParam;
-}
-
-BOOL SetItemParam(HWND treeview, HTREEITEM which, LPARAM param)
-{
-    TVITEM item;
-
-    item.mask = TVIF_HANDLE | TVIF_PARAM;
-    item.hItem = which ? which : TreeView_GetNextItem(treeview, NULL, TVGN_CARET);
-    item.lParam = param; //why was -1?
-
-    if (item.hItem)	//TVM_GETITIEM does NOT have NULL-protection
-        return TreeView_SetItem(treeview, &item);
-
-    return FALSE;
-}
-
 INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
 {
     HWND treeview = GetDlgItem(dialog, IDC_TRIGGER_TREE);	//all use this
@@ -200,19 +207,24 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
         case IDC_ADD_TRIG:
         {
             HTREEITEM new_trig;
-            Scen.triggers->at(Scen.triggers->add()).trigger_name = win32::Utf16ToUtf8(make_fmt_string(L"Trigger %d", Scen.triggers->size()));
+            Scen.triggers->at(Scen.triggers->add()).trigger_name = win32::Utf16ToUtf8(make_fmt_string(stMap[IDS_NAME_NEW_TRIGGER], Scen.triggers->size()));
             TreeItemIterator select(treeview);
             if (select)
             {
-                auto select_idx = GetItemParam(treeview, select);//Todo (check GetItemParam)
+                auto select_item = (ItemData*)select.lparam();
+                if (select_item->type != ItemData::TRIGGER)
+                {
+                    select.parent();
+                    select_item = (ItemData*)select.lparam();
+                }
                 auto idx_end = Scen.triggers->size();
-                Scen.triggers->mov(select_idx + 1, idx_end - 1, idx_end);
+                Scen.triggers->mov(select_item->idx + 1, idx_end - 1, idx_end);
                 auto to_iter = select;
                 while (++to_iter)
                 {
-                    SetItemParam(treeview, to_iter, GetItemParam(treeview, to_iter) + 1);
+                    ++(((ItemData*)to_iter.lparam())->idx);
                 }
-                new_trig = TreeAddTrig(treeview, select_idx + 1, select);
+                new_trig = TreeAddTrig(treeview, select_item->idx + 1, select);
             }
             else
             {
@@ -227,16 +239,25 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
             TreeItemIterator select(treeview);
             if (select)
             {
-                HTREEITEM next_trig = select + 1 ? select + 1 : select - 1;
-                auto select_idx = GetItemParam(treeview, select);//Todo (check GetItemParam)
-                Scen.triggers->del(select_idx);
-                auto to_iter = select;
-                while (++to_iter)
+                auto select_item = (ItemData*)select.lparam();
+                HTREEITEM next_item = select + 1 ? select + 1 : select - 1;
+                switch (select_item->type)
                 {
-                    SetItemParam(treeview, to_iter, GetItemParam(treeview, to_iter) - 1);
+                case ItemData::TRIGGER:
+                {
+                    Scen.triggers->del(select_item->idx);
+                    auto to_iter = select;
+                    while (++to_iter)
+                    {
+                        --(((ItemData*)to_iter.lparam())->idx);
+                    }
+                    TreeView_DeleteItem(treeview, select);
+                    TreeView_Select(treeview, next_item, TVGN_CARET);
+                    break;
                 }
-                TreeView_DeleteItem(treeview, select);
-                TreeView_Select(treeview, next_trig, TVGN_CARET);
+                default:
+                    break;
+                }
                 SetFocus(treeview);
             }
             break;
@@ -244,23 +265,36 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
         case IDC_COPY_TO_ALL:
         {
             TreeItemIterator target(treeview);
-            auto idx = GetItemParam(treeview, target);//Todo
-            auto old_end = Scen.triggers->size();
             if (target)
             {
-                auto added_cnt = Scen.triggers->copy_to_all(idx, CP_MOD_SOURCE | CP_MOD_TARGET | CP_STRICT_BASE);
-                for (size_t i = 1; i <= added_cnt; ++i)
+                auto select_item = (ItemData*)target.lparam();
+                switch (select_item->type)
                 {
-                    TreeAddTrig(treeview, idx + i, target);
+                case ItemData::TRIGGER:
+                {
+                    auto old_end = Scen.triggers->size();
+                    auto added_cnt = Scen.triggers->copy_to_all(select_item->idx, CP_MOD_SOURCE | CP_MOD_TARGET | CP_STRICT_BASE);
+                    for (size_t i = 1; i <= added_cnt; ++i)
+                    {
+                        TreeAddTrig(treeview, select_item->idx + i, target);
+                        ++target;
+                    }
                     ++target;
+                    TreeView_Select(treeview, target, TVGN_CARET);
+                    do
+                    {
+                        ((ItemData*)target.lparam())->idx += added_cnt;
+                    } while (++target);
+                    SetFocus(treeview);
+                    break;
                 }
-                ++target;
-                TreeView_Select(treeview, target, TVGN_CARET);
-                do
-                {
-                    SetItemParam(treeview, target, GetItemParam(treeview, target) + added_cnt);
-                } while (++target);
-                SetFocus(treeview);
+                case ItemData::CONDITION:
+                    break;
+                case ItemData::EFFECT:
+                    break;
+                default:
+                    break;
+                }
             }
             break;
         }
@@ -349,21 +383,23 @@ INT_PTR Handle_WM_NOTIFY(HWND dialog, NMHDR const* header)
         //   break;
         //   */
     case TVN_SELCHANGED:
-        SendMessage(hInfo, TC_LOAD_PARAM, 0, ((NMTREEVIEW*)header)->itemNew.lParam);
+        if (((NMTREEVIEW*)header)->itemNew.lParam)
+        {
+            SendMessage(hInfo, TC_LOAD_PARAM, 0, ((NMTREEVIEW*)header)->itemNew.lParam);
+        }
         break;
 
         //case TVN_KEYDOWN:
         //	TrigTree_HandleKeyDown(dialog, (LPNMTVKEYDOWN)header);
         //	break;
 
-        //case TVN_DELETEITEM:
-        //{
-        //	const NMTREEVIEW* info = (NMTREEVIEW*)header;
-        //	class ItemData* data = (class ItemData*)info->itemOld.lParam;
-
-        //	delete data;
-        //}
-        //break;
+    case TVN_DELETEITEM:
+    {
+        const NMTREEVIEW* info = (NMTREEVIEW*)header;
+        ItemData* data = (ItemData*)info->itemOld.lParam;
+        delete data;
+        break;
+    }
 
         //case TVN_BEGINDRAG:
         //	TrigTree_HandleDrag(header->hwndFrom, (NMTREEVIEW*)header);
@@ -432,7 +468,7 @@ BOOL MakeTrigDlg(HWND dialog)
 
     //SendMessage(GetDlgItem(dialog, IDC_ADD_TRIG), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)icon_trig);
     CreateToolTip(IDC_ADD_TRIG, dialog, stMap[TIPS_ADD_TRIGGER]);
-    CreateToolTip(IDC_DEL_TRIG, dialog, stMap[TIPS_DEL_TRIGGER]);
+    CreateToolTip(IDC_DEL_TRIG, dialog, stMap[TIPS_DEL_TREEITEM]);
     CreateToolTip(IDC_COPY_TO_ALL, dialog, stMap[TIPS_TRIGGER_COPY_TO_ALL]);
     CreateToolTip(IDC_SORT, dialog, stMap[TIPS_TRIGGER_SORT]);
 

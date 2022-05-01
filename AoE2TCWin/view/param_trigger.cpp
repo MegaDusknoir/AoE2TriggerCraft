@@ -4,11 +4,11 @@
 #include "infos.h"
 #include <vector>
 
-void LoadTrigger(HWND dialog, uint32_t idx)
+void LoadTrigger(HWND dialog, ItemData* pdata)
 {
-    if (idx >= 0)
+    if (pdata->type == ItemData::TRIGGER)
     {
-        auto& trig = Scen.triggers->at(idx);
+        auto& trig = Scen.triggers->at(pdata->idx);
         CheckDlgButton(dialog, IDC_PT_ENABLE, trig.enabled);
         CheckDlgButton(dialog, IDC_PT_LOOP, trig.looping);
         CheckDlgButton(dialog, IDC_PT_AS_TITLE, trig.make_header);
@@ -58,7 +58,7 @@ INT_PTR CALLBACK TrigParamDlgProc(HWND dialog, UINT uMsg, WPARAM wParam, LPARAM 
     }
     case TC_LOAD_PARAM:
     {
-        LoadTrigger(dialog, lParam);
+        LoadTrigger(dialog, (ItemData*)lParam);
         break;
     }
     default:
