@@ -7,11 +7,11 @@
 #include <deque>
 #include <memory>
 #include <algorithm>
-#include "util/file_types.h"
+#include "../util/file_types.h"
 #include "aoe2scenario_1_41.h"
 #include "aoe2scenario_1_45.h"
 #include "aoe2scenario_1_46.h"
-#include "util/utilio.h"
+#include "../util/utilio.h"
 
 #define OID_ADD_TRIGGER 0
 #define OID_DEL_TRIGGER 1

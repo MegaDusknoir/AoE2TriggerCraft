@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "./util/gason/gason.h"
-#include "./util/utf8conv/utf8conv.h"
+#include "../util/gason/gason.h"
+#include "../util/utf8conv/utf8conv.h"
 
 struct AoEJsonData
 {

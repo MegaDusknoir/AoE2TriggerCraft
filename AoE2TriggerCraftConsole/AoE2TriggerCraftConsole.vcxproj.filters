@@ -18,7 +18,7 @@
     <ClCompile Include="AoE2TriggerCraftConsole.cpp">
       <Filter>Parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\aoe2scenario.cpp">
+    <ClCompile Include="..\model\aoe2scenario.cpp">
       <Filter>Parser</Filter>
     </ClCompile>
     <ClCompile Include="..\util\file_types.cpp">
@@ -30,18 +30,18 @@
     <ClCompile Include="..\util\gason\gason.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\aoejson.cpp">
+    <ClCompile Include="..\model\aoejson.cpp">
       <Filter>Parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\aoe2scenario.h">
+    <ClInclude Include="..\model\aoe2scenario.h">
       <Filter>Parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\aoe2scenario_1_41.h">
+    <ClInclude Include="..\model\aoe2scenario_1_41.h">
       <Filter>Parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\aoe2scenario_1_45.h">
+    <ClInclude Include="..\model\aoe2scenario_1_45.h">
       <Filter>Parser</Filter>
     </ClInclude>
     <ClInclude Include="..\util\file_types.h">
@@ -62,10 +62,10 @@
     <ClInclude Include="..\util\gason\gason.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\aoejson.h">
+    <ClInclude Include="..\model\aoejson.h">
       <Filter>Parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\aoe2scenario_1_46.h">
+    <ClInclude Include="..\model\aoe2scenario_1_46.h">
       <Filter>Parser</Filter>
     </ClInclude>
   </ItemGroup>

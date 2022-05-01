@@ -41,4 +41,8 @@
 **/x64/Release
 **/x86/Release
 
+# Dist
+**/dist
+
 *.aoe2scenario
+*.lnk

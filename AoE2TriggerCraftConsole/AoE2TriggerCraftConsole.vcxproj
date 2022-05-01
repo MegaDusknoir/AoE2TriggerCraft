@@ -140,19 +140,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\aoe2scenario.cpp" />
-    <ClCompile Include="..\aoejson.cpp" />
+    <ClCompile Include="..\model\aoe2scenario.cpp" />
+    <ClCompile Include="..\model\aoejson.cpp" />
     <ClCompile Include="..\util\file_types.cpp" />
     <ClCompile Include="..\util\gason\gason.cpp" />
     <ClCompile Include="..\util\utilio.cpp" />
     <ClCompile Include="AoE2TriggerCraftConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\aoe2scenario.h" />
-    <ClInclude Include="..\aoe2scenario_1_41.h" />
-    <ClInclude Include="..\aoe2scenario_1_45.h" />
-    <ClInclude Include="..\aoe2scenario_1_46.h" />
-    <ClInclude Include="..\aoejson.h" />
+    <ClInclude Include="..\model\aoe2scenario.h" />
+    <ClInclude Include="..\model\aoe2scenario_1_41.h" />
+    <ClInclude Include="..\model\aoe2scenario_1_45.h" />
+    <ClInclude Include="..\model\aoe2scenario_1_46.h" />
+    <ClInclude Include="..\model\aoejson.h" />
     <ClInclude Include="..\util\file_types.h" />
     <ClInclude Include="..\util\gason\gason.h" />
     <ClInclude Include="..\util\libdeflate\libdeflate.h" />

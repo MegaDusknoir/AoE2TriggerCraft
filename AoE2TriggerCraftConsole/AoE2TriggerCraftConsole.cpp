@@ -3,10 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "../aoe2scenario.h"
+#include "../model/aoe2scenario.h"
 #include "../util/gason/gason.h"
 #include "../util/utf8conv/utf8conv.h"
-#include "../aoejson.h"
+#include "../model/aoejson.h"
 
 using namespace std;
 using namespace AoE2ScenarioNamespace;

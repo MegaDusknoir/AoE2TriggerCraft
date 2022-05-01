@@ -16,16 +16,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\aoe2scenario.h">
+    <ClInclude Include="..\model\aoe2scenario.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\aoe2scenario_1_41.h">
+    <ClInclude Include="..\model\aoe2scenario_1_41.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\aoe2scenario_1_45.h">
+    <ClInclude Include="..\model\aoe2scenario_1_45.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\aoe2scenario_1_46.h">
+    <ClInclude Include="..\model\aoe2scenario_1_46.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="AoE2TCWin.h">
@@ -66,13 +66,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\aoe2scenario.cpp">
+    <ClCompile Include="..\model\aoe2scenario.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="AoE2TCWin.cpp">
       <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="..\aoejson.cpp">
+    <ClCompile Include="..\model\aoejson.cpp">
       <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="..\util\file_types.cpp">

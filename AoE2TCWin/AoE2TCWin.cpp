@@ -7,7 +7,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #include "framework.h"
 #include "AoE2TCWin.h"
-#include "../aoe2scenario.h"
+#include "../model/aoe2scenario.h"
 #include "view/editors.h"
 #include "view/viewers.h"
 #include "view/infos.h"

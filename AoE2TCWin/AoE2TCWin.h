@@ -1,9 +1,9 @@
 #pragma once
 
 #include "resource.h"
-#include "../aoe2scenario.h"
+#include "../model/aoe2scenario.h"
 #include "../util/utf8conv/utf8conv.h"
-#include "../aoejson.h"
+#include "../model/aoejson.h"
 #include <map>
 
 class StringMap

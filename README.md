@@ -39,9 +39,12 @@ Temporary, to decrease the work to do, we only support the newest scenario forma
 ### What can it do at present
 
 - Read and save scenario.
+- Import/Export strings in scenario.
 - View trigger tree, show the cond/effe belong to them.
 - Duplicate a trigger to every player, modifying the player param, for multiplay.
-- View some scenario base info.
+- View(only) some scenario base info.
+- View(only) trigger info.
+- Add/Remove triggers/conditions/effects.
 
 ## API
 

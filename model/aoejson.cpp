@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 #include "aoejson.h"
-#include "./util/gason/gason.h"
-#include "./util/utf8conv/utf8conv.h"
+#include "../util/gason/gason.h"
+#include "../util/utf8conv/utf8conv.h"
 
 using std::ifstream;
 using std::string;
