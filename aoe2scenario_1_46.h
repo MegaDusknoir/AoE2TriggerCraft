@@ -739,6 +739,63 @@ namespace AoE2Scenario_1_46_Namespace
                     int32_t number_of_effects;
                     struct EffectStruct
                     {
+                        EffectStruct()
+                            :
+                            effect_type(0),
+                            static_value_46(52),
+                            ai_script_goal(-1),
+                            quantity(-1),
+                            tribute_list(-1),
+                            diplomacy(-1),
+                            number_of_units_selected(-1),
+                            legacy_location_object_reference(-1),
+                            object_list_unit_id(-1),
+                            source_player(-1),
+                            target_player(-1),
+                            technology(-1),
+                            string_id(-1),
+                            unknown_2(-1),
+                            display_time(-1),
+                            trigger_id(-1),
+                            location_x(-1),
+                            location_y(-1),
+                            area_x1(-1),
+                            area_y1(-1),
+                            area_x2(-1),
+                            area_y2(-1),
+                            object_group(-1),
+                            object_type(-1),
+                            instruction_panel_position(-1),
+                            attack_stance(-1),
+                            time_unit(-1),
+                            enabled(-1),
+                            food(-1),
+                            wood(-1),
+                            stone(-1),
+                            gold(-1),
+                            item_id(-1),
+                            flash_object(-1),
+                            force_research_technology(-1),
+                            visibility_state(-1),
+                            scroll(-1),
+                            operation(-1),
+                            object_list_unit_id_2(-1),
+                            button_location(-1),
+                            ai_signal_value(-1),
+                            unknown_3(-1),
+                            object_attributes(-1),
+                            variable(-1),
+                            timer(-1),
+                            facet(-1),
+                            location_object_reference(-1),
+                            play_sound(-1),
+                            player_color(-1),
+                            unknown_4(-1),
+                            color_mood(-1),
+                            reset_timer(-1),
+                            object_state(-1),
+                            action_type(-1)
+                        {}
                         int32_t effect_type;                        //效果类型
                         int32_t static_value_46;                    //Not used(?) regularly 48
                         int32_t ai_script_goal;                     //AI脚本goal
@@ -922,6 +979,38 @@ namespace AoE2Scenario_1_46_Namespace
                     int32_t number_of_conditions;
                     struct ConditionStruct
                     {
+                        ConditionStruct()
+                            :
+                            condition_type(0),
+                            static_value_21(24),
+                            quantity(-1),
+                            attribute(-1),
+                            unit_object(-1),
+                            next_object(-1),
+                            object_list(-1),
+                            source_player(-1),
+                            technology(-1),
+                            timer(-1),
+                            unknown(-1),
+                            area_x1(-1),
+                            area_y1(-1),
+                            area_x2(-1),
+                            area_y2(-1),
+                            object_group(-1),
+                            object_type(-1),
+                            ai_signal(-1),
+                            inverted(-1),
+                            unknown_2(-1),
+                            variable(-1),
+                            comparison(-1),
+                            target_player(-1),
+                            unit_ai_action(-1),
+                            unknown_4(-1),
+                            object_state(-1),
+                            unknown_new1_in_1_46(-1),
+                            unknown_new2_in_1_46(-1),
+                            new_in_1_46(-1)
+                        {}
                         int32_t condition_type;     //条件类型
                         int32_t static_value_21;    //Not used(?) regularly 23
                         int32_t quantity;           //数量

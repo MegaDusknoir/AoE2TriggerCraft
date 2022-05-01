@@ -309,10 +309,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringMap(hInstance, IDS_SAVE, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_SAVE_SUCCESS, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_SAVE_FAIL, stMap, MAX_LOADSTRING);
-    LoadStringMap(hInstance, IDS_OPEN_FAIL, stMap, MAX_LOADSTRING);
-    LoadStringMap(hInstance, IDS_WELCOME, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_SAVE_TEXT_SUCCESS, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_SAVE_TEXT_FAIL, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_OPEN_SUCCESS, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_OPEN_FAIL, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_OPEN_FAIL_BY_VERSION, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_OPEN_FAIL_BY_FORMAT, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_OPEN_TEXT_SUCCESS, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_OPEN_TEXT_FAIL, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_WELCOME, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_ADD_TRIGGER, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_ADD_CONDITION, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_ADD_EFFECT, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_DEL_TREEITEM, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_TRIGGER_COPY_TO_ALL, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, TIPS_TRIGGER_SORT, stMap, MAX_LOADSTRING);
@@ -587,20 +595,37 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 void OpenScen(HWND hWnd, PWSTR pszFilePath)
 {
+    HCURSOR previous;
     try
     {
+        previous = SetCursor(LoadCursor(NULL, IDC_WAIT));
         Scen.open(pszFilePath);
+        SetCursor(previous);
         //MessageBox(NULL, pszFilePath, stMap[IDS_OPEN], MB_OK);
         // set status bar text
         ScenPath = pszFilePath;
         ScenName = getFilenameFromPath(pszFilePath);
         SetWindowText(hWnd, (std::wstring(szTitle) + L" - " + ScenName).c_str());
         SetWindowText(hBar, stMap[IDS_OPEN_SUCCESS]);
+        HCURSOR previous = SetCursor(LoadCursor(NULL, IDC_WAIT));
         SendMessage(hWnd, TC_LOAD, 0, 0);
+        SetCursor(previous);
     }
-    catch (std::exception& ex)
+    catch (scenario_parser_error& ex)
     {
-        MessageBox(NULL, stMap[IDS_OPEN_FAIL], stMap[IDS_OPEN], MB_ICONWARNING);
+        SetCursor(previous);
+        MessageBox(NULL, stMap[IDS_OPEN_FAIL_BY_FORMAT], stMap[IDS_OPEN], MB_ICONWARNING);
+        SetWindowText(hBar, stMap[IDS_OPEN_FAIL]);
+    }
+    catch (scenario_version_error& ex)
+    {
+        SetCursor(previous);
+        MessageBox(NULL,
+            make_fmt_string(stMap[IDS_OPEN_FAIL_BY_VERSION],
+                win32::Utf8ToUtf16(ex.support_version).c_str(),
+                win32::Utf8ToUtf16(ex.current_version).c_str()
+            ).c_str(),
+            stMap[IDS_OPEN], MB_ICONWARNING);
         SetWindowText(hBar, stMap[IDS_OPEN_FAIL]);
     }
 }
@@ -623,13 +648,13 @@ void ImportScenStr(HWND hWnd, PWSTR pszFilePath)
     try
     {
         Scen.text_io->fimport(pszFilePath);
-        SetWindowText(hBar, stMap[IDS_OPEN_SUCCESS]);
+        SetWindowText(hBar, stMap[IDS_OPEN_TEXT_SUCCESS]);
         SendMessage(hWnd, TC_LOAD, 0, 0);
     }
     catch (std::exception& ex)
     {
-        MessageBox(NULL, stMap[IDS_OPEN_FAIL], stMap[IDS_OPEN], MB_ICONWARNING);
-        SetWindowText(hBar, stMap[IDS_OPEN_FAIL]);
+        MessageBox(NULL, stMap[IDS_OPEN_TEXT_FAIL], stMap[IDS_OPEN], MB_ICONWARNING);
+        SetWindowText(hBar, stMap[IDS_OPEN_TEXT_FAIL]);
     }
 }
 
@@ -638,11 +663,11 @@ void ExportScenStr(HWND hWnd, PWSTR pszFilePath)
     try
     {
         Scen.text_io->fexport(pszFilePath);
-        MessageBox(NULL, stMap[IDS_SAVE_SUCCESS], stMap[IDS_SAVE], MB_OK);
+        MessageBox(NULL, stMap[IDS_SAVE_TEXT_SUCCESS], stMap[IDS_SAVE], MB_OK);
     }
     catch (std::exception& ex)
     {
-        MessageBox(NULL, stMap[IDS_SAVE_FAIL], stMap[IDS_SAVE], MB_ICONWARNING);
+        MessageBox(NULL, stMap[IDS_SAVE_TEXT_FAIL], stMap[IDS_SAVE], MB_ICONWARNING);
     }
 }
 

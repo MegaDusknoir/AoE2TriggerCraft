@@ -52,7 +52,7 @@ namespace AoE2ScenarioNamespace
             auto raw_else(scen_body.substr(scen.body.read(scen_body.data())));
             if (raw_else.empty() == false)
             {
-                throw std::runtime_error("Unexpected file length.");
+                throw scenario_parser_error("Unexpected file length.");
             }
             triggers->load();
 #ifndef NSPEEDTRACE
@@ -60,15 +60,15 @@ namespace AoE2ScenarioNamespace
             std::cout << "Read completed in " << (double)(t2 - t1) / CLOCKS_PER_SEC << "sec" << std::endl;
 #endif
         }
-        else if (check_version == string("1.41"))
-        {
-            //Transform 1.41 to newest format.
-        }
+        //else if (check_version == string("1.41"))
+        //{
+        //    //Transform 1.41 to newest format.
+        //}
         else
         {
             string err_what;
             err_what = err_what + "Version " + check_version + " not supported yet.";
-            throw std::runtime_error(err_what);
+            throw scenario_version_error(err_what, string(current_version), check_version);
         }
     }
 
@@ -156,6 +156,8 @@ namespace AoE2ScenarioNamespace
     }
 
 
+    using ConditionStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct::ConditionStruct;
+    using EffectStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct::EffectStruct;
     using TriggerStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct;
     using TriggerStructIdx = uint32_t;
 
@@ -170,6 +172,20 @@ namespace AoE2ScenarioNamespace
     TriggerStructIdx TriggerManager::size()
     {
         return list_by_order.size();
+    }
+    int32_t TriggerManager::add_c(TriggerStructIdx parent_idx)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        parent.condition_data.push_back(ConditionStruct());
+        parent.condition_display_order_array.push_back(parent.condition_data.size() - 1);
+        return parent.condition_display_order_array.size() - 1;
+    }
+    int32_t TriggerManager::add_e(TriggerStructIdx parent_idx)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        parent.effect_data.push_back(EffectStruct());
+        parent.effect_display_order_array.push_back(parent.effect_data.size() - 1);
+        return parent.effect_display_order_array.size() - 1;
     }
     TriggerStructIdx TriggerManager::add()
     {
@@ -193,6 +209,18 @@ namespace AoE2ScenarioNamespace
     {
         del(list_by_order.begin() + to_del);
     }
+    void TriggerManager::del_c(TriggerStructIdx parent_idx, int32_t to_del)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.condition_display_order_array;
+        del_c(parent_idx, order.begin() + to_del);
+    }
+    void TriggerManager::del_e(TriggerStructIdx parent_idx, int32_t to_del)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.effect_display_order_array;
+        del_e(parent_idx, order.begin() + to_del);
+    }
     void TriggerManager::del(TriggerStructIdx to_del_begin, TriggerStructIdx n)
     {
         for (auto i = n; i != 0; --i)
@@ -204,6 +232,90 @@ namespace AoE2ScenarioNamespace
     {
         list_deleted.push_back(*to_del);
         list_by_order.erase(to_del);
+    }
+    void TriggerManager::del_c(TriggerStructIdx parent_idx, vector<int32_t>::iterator to_del)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.condition_display_order_array;
+        //list_deleted.push_back(*to_del); // Todo: condition ver
+        // // undoable del is a huge work, so temporary use this
+        parent.condition_data.erase(parent.condition_data.begin() + *to_del);
+        for (auto& cond_id : order)
+        {
+            if (cond_id > *to_del)
+            {
+                --cond_id;
+            }
+        }
+        order.erase(to_del);
+    }
+    void TriggerManager::del_e(TriggerStructIdx parent_idx, vector<int32_t>::iterator to_del)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.effect_display_order_array;
+        //list_deleted.push_back(*to_del); // Todo: effect ver
+        // // undoable del is a huge work, so temporary use this
+        parent.effect_data.erase(parent.effect_data.begin() + *to_del);
+        for (auto& eff_id : order)
+        {
+            if (eff_id > *to_del)
+            {
+                --eff_id;
+            }
+        }
+        order.erase(to_del);
+    }
+    void TriggerManager::mov_e(TriggerStructIdx parent_idx, int32_t target, int32_t idx_begin, int32_t idx_end)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.effect_display_order_array;
+        mov_e(parent_idx, order.begin() + target, order.begin() + idx_begin, order.begin() + idx_end);
+    }
+    void TriggerManager::mov_e(TriggerStructIdx parent_idx, vector<int32_t>::iterator target, vector<int32_t>::iterator idx_begin, vector<int32_t>::iterator idx_end)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.effect_display_order_array;
+        if (target < idx_begin || target > idx_end)
+        {
+            size_t target_idx;
+            if (target < idx_begin)
+            {
+                target_idx = target - order.begin();
+            }
+            else
+            {
+                target_idx = target - (idx_end - idx_begin) - order.begin();
+            }
+            vector<TriggerStructIdx> operand(idx_begin, idx_end);
+            order.erase(idx_begin, idx_end);
+            order.insert(order.begin() + target_idx, operand.begin(), operand.end());
+        }
+    }
+    void TriggerManager::mov_c(TriggerStructIdx parent_idx, int32_t target, int32_t idx_begin, int32_t idx_end)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.condition_display_order_array;
+        mov_c(parent_idx, order.begin() + target, order.begin() + idx_begin, order.begin() + idx_end);
+    }
+    void TriggerManager::mov_c(TriggerStructIdx parent_idx, vector<int32_t>::iterator target, vector<int32_t>::iterator idx_begin, vector<int32_t>::iterator idx_end)
+    {
+        auto& parent = scen->body.Triggers.trigger_data[list_by_order[parent_idx]];
+        auto& order = parent.condition_display_order_array;
+        if (target < idx_begin || target > idx_end)
+        {
+            size_t target_idx;
+            if (target < idx_begin)
+            {
+                target_idx = target - order.begin();
+            }
+            else
+            {
+                target_idx = target - (idx_end - idx_begin) - order.begin();
+            }
+            vector<TriggerStructIdx> operand(idx_begin, idx_end);
+            order.erase(idx_begin, idx_end);
+            order.insert(order.begin() + target_idx, operand.begin(), operand.end());
+        }
     }
     void TriggerManager::mov(TriggerStructIdx target, TriggerStructIdx idx_begin, TriggerStructIdx idx_end)
     {

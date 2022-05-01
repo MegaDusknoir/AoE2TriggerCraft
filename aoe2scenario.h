@@ -81,6 +81,8 @@ namespace AoE2ScenarioNamespace
 
     class TriggerManager
     {
+        using ConditionStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct::ConditionStruct;
+        using EffectStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct::EffectStruct;
         using TriggerStruct = AoE2ScenarioCurrent::FileBody::TriggersStruct::TriggerStruct;
         using TriggerStructIdx = uint32_t;
         AoE2ScenarioCurrent* scen;
@@ -92,6 +94,16 @@ namespace AoE2ScenarioNamespace
         TriggerStruct& operator[](size_t idx);
         TriggerStruct& at(size_t idx);
         TriggerStructIdx size();
+        int32_t add_c(TriggerStructIdx parent_idx);
+        //int32_t add_c(TriggerStructIdx parent_idx, const ConditionStruct& val); //Todo
+        //int32_t add_c(TriggerStructIdx parent_idx, ConditionStruct&& val); //Todo
+        int32_t add_e(TriggerStructIdx parent_idx);
+        //int32_t add_e(TriggerStructIdx parent_idx, const EffectStruct& val); //Todo
+        //int32_t add_e(TriggerStructIdx parent_idx, EffectStruct&& val); //Todo
+        void del_c(TriggerStructIdx parent_idx, int32_t to_del);
+        void del_e(TriggerStructIdx parent_idx, int32_t to_del);
+        void mov_c(TriggerStructIdx parent_idx, int32_t target, int32_t idx_begin, int32_t idx_end);
+        void mov_e(TriggerStructIdx parent_idx, int32_t target, int32_t idx_begin, int32_t idx_end);
         //push_back to vector and order
         TriggerStructIdx add();
         TriggerStructIdx add(const TriggerStruct& val);
@@ -111,7 +123,11 @@ namespace AoE2ScenarioNamespace
         void change_player(TriggerStruct& trig, int32_t base_player, int32_t player, uint32_t mode);
         void change_player_judge(int32_t base_player, int32_t player, uint32_t mode, int32_t& current_attr);
         void del(vector<TriggerStructIdx>::iterator to_del);
+        void del_c(TriggerStructIdx parent_idx, vector<int32_t>::iterator to_del);
+        void del_e(TriggerStructIdx parent_idx, vector<int32_t>::iterator to_del);
         void mov(vector<TriggerStructIdx>::iterator target, vector<TriggerStructIdx>::iterator idx_begin, vector<TriggerStructIdx>::iterator idx_end);
+        void mov_c(TriggerStructIdx parent_idx, vector<int32_t>::iterator target, vector<int32_t>::iterator idx_begin, vector<int32_t>::iterator idx_end);
+        void mov_e(TriggerStructIdx parent_idx, vector<int32_t>::iterator target, vector<int32_t>::iterator idx_begin, vector<int32_t>::iterator idx_end);
     };
 
     class TextIO
@@ -133,6 +149,20 @@ namespace AoE2ScenarioNamespace
         static void strout_check(const string& s, AutoFile& fout);
         static string getline_to_str(AutoFile& fin);
         template <typename T> static void strin_check(vStr<T>& s, AutoFile& fin);
+    };
+
+    class scenario_version_error : public std::runtime_error
+    {
+    public:
+        scenario_version_error(const std::string& what, const string& support_version, const string& current_version)
+            :runtime_error(what), support_version(support_version), current_version(current_version) {}
+        const string support_version;
+        const string current_version;
+    };
+    class scenario_parser_error : public std::runtime_error
+    {
+    public:
+        scenario_parser_error(const std::string& what) :runtime_error(what) {}
     };
 
     //deprecated redo/undo operators, may update in the future

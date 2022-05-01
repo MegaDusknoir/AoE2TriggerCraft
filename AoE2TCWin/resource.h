@@ -30,9 +30,17 @@
 #define IDS_SORT_COMPLETE               120
 #define IDS_TEXT_TYPE                   121
 #define IDS_NAME_NEW_TRIGGER            122
+#define TIPS_ADD_CONDITION              123
+#define TIPS_ADD_EFFECT                 124
+#define IDS_OPEN_FAIL_BY_VERSION        125
+#define IDS_OPEN_FAIL_BY_FORMAT         126
+#define IDS_SAVE_TEXT_SUCCESS           127
 #define IDR_MAINFRAME                   128
+#define IDS_SAVE_TEXT_FAIL              128
 #define IDS_ALL_TYPE                    129
+#define IDS_OPEN_TEXT_SUCCESS           130
 #define IDD_UNITS                       131
+#define IDS_OPEN_TEXT_FAIL              131
 #define IDD_TRIGGERS                    132
 #define IDD_MAPVIEW                     133
 #define IDB_COND                        134
@@ -50,11 +58,15 @@
 #define IDI_B_DEL_TRIG                  142
 #define IDI_B_COPY_TO_ALL               143
 #define IDI_B_SORT                      144
+#define IDI_B_NEW_EFFE                  146
+#define IDI_B_NEW_COND                  147
 #define IDC_TRIGGER_TREE                1007
 #define IDC_ADD_TRIG                    1009
 #define IDC_DEL_TRIG                    1010
 #define IDC_COPY_TO_ALL                 1011
 #define IDC_SORT                        1012
+#define IDC_ADD_COND                    1013
+#define IDC_ADD_EFFE                    1014
 #define IDC_EDIT4                       1051
 #define IDC_PT_DESC_STR                 1051
 #define IDC_EDIT5                       1052
@@ -83,6 +95,7 @@
 #define IDC_PT_ON_SCREEN                1072
 #define IDC_EDIT7                       1073
 #define IDC_PT_SHORT_DESC               1073
+#define IDC_MAP_RECT                    1073
 #define IDC_CHECK8                      1074
 #define IDC_PT_MUTE                     1074
 #define ID_32771                        32771
@@ -106,9 +119,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        145
+#define _APS_NEXT_RESOURCE_VALUE        148
 #define _APS_NEXT_COMMAND_VALUE         32785
-#define _APS_NEXT_CONTROL_VALUE         1073
+#define _APS_NEXT_CONTROL_VALUE         1074
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
