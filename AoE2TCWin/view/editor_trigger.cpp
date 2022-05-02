@@ -451,12 +451,21 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
                             TreeAddTrig(treeview, select_item->idx + i, target);
                             ++target;
                         }
-                        ++target;
-                        TreeView_Select(treeview, target, TVGN_CARET);
-                        do
+                        if (target + 1)
                         {
-                            ((ItemData*)target.lparam())->idx += added_cnt;
-                        } while (++target);
+                            // not last, remap the idx after
+                            ++target;
+                            TreeView_Select(treeview, target, TVGN_CARET);
+                            do
+                            {
+                                ((ItemData*)target.lparam())->idx += added_cnt;
+                            } while (++target);
+                        }
+                        else
+                        {
+                            // if last, select
+                            TreeView_Select(treeview, target, TVGN_CARET);
+                        }
                         SetFocus(treeview);
                     }
                     break;
