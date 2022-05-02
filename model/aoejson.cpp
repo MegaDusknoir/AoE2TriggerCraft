@@ -75,13 +75,16 @@ double AoEJsonRead::json_read(JsonValue o)
         sum += o.toNumber();
         break;
     case JSON_STRING:
-        if (strcmp(excepted_key[excepted_key_idx], "condition_name") == 0)
+        if (excepted_key_idx >= 0)
         {
-            paser_data.condition_name.push_back(win32::Utf8ToUtf16(string(o.toString())));
-        }
-        else if (strcmp(excepted_key[excepted_key_idx], "effect_name") == 0)
-        {
-            paser_data.effect_name.push_back(win32::Utf8ToUtf16(string(o.toString())));
+            if (strcmp(excepted_key[excepted_key_idx], "condition_name") == 0)
+            {
+                paser_data.condition_name.push_back(win32::Utf8ToUtf16(string(o.toString())));
+            }
+            else if (strcmp(excepted_key[excepted_key_idx], "effect_name") == 0)
+            {
+                paser_data.effect_name.push_back(win32::Utf8ToUtf16(string(o.toString())));
+            }
         }
         break;
     case JSON_ARRAY:
@@ -108,7 +111,7 @@ double AoEJsonRead::json_read(JsonValue o)
     }
     return sum;
 }
-void AoEJsonRead::set_language()
+void AoEJsonRead::set_language(size_t lang_idx)
 {
-    excepted_key[0] = language_key[0];
+    excepted_key[0] = language_key[lang_idx];
 }

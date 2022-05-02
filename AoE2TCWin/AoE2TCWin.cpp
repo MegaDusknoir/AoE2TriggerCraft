@@ -65,8 +65,23 @@ WCHAR* StringMap::operator[](UINT uID)
 void GameDataJsonLoad(void)
 {
     WCHAR szDir[512];
+    size_t target_lang = 0;
+    auto lang_id = GetUserDefaultUILanguage();
+    switch (lang_id)
+    {
+    case 1028://tw
+    case 3076://hk
+    case 5124://mo
+    case 4100://sg
+    case 2052://cn
+        target_lang = 0;
+        break;
+    default:
+        target_lang = 1;
+        break;
+    }
     GetCurrentDirectory(512, szDir);
-    AoEJsonRead(GameStr).json_load((std::wstring(szDir) + L"/string.json").c_str());
+    AoEJsonRead(GameStr, target_lang).json_load((std::wstring(szDir) + L"/string.json").c_str());
 }
 
 LRESULT CALLBACK EditorWndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)

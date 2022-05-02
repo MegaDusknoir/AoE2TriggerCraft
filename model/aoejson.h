@@ -13,10 +13,10 @@ struct AoEJsonData
 class AoEJsonRead
 {
 public:
-    AoEJsonRead(AoEJsonData& _paser_data)
+    AoEJsonRead(AoEJsonData& _paser_data, size_t lang_idx = 0)
         :excepted_key_idx(-1), paser_data(_paser_data)
     {
-        set_language();
+        set_language(lang_idx);
     }
     void json_load(const char* path);
     void json_load(const wchar_t* path);
@@ -25,5 +25,5 @@ private:
     int excepted_key_idx;
     AoEJsonData& paser_data;
     double json_read(JsonValue o);
-    void set_language();
+    void set_language(size_t lang_idx);
 };
