@@ -480,6 +480,57 @@ INT_PTR Handle_WM_COMMAND(HWND dialog, WORD code, WORD id, HWND)
             }
             break;
         }
+        case IDC_DEL_FOR_ALL:
+        {
+            auto to_del_cnt = Scen.scen.header.player_count - 1;
+            TreeItemIterator select(treeview);
+            if (select + to_del_cnt)
+            {
+                //misoperation check
+                auto& first_trig = Scen.triggers->at(((ItemData*)select.lparam())->idx);
+                auto& last_trig = Scen.triggers->at(((ItemData*)(select + to_del_cnt).lparam())->idx);
+                std::string to_find("(p8)");
+                to_find[2] = '0' + to_del_cnt + 1;
+                if (last_trig.trigger_name.s.find(to_find) == last_trig.trigger_name.s.npos
+                    && MessageBox(treeview, stMap[IDS_DEL_FOR_ALL_WARNING], stMap[TIPS_TRIGGER_DEL_FOR_ALL], MB_ICONWARNING | MB_OKCANCEL) == IDCANCEL)
+                {
+                    break;
+                }
+                auto select_item = (ItemData*)select.lparam();
+                switch (select_item->type)
+                {
+                case ItemData::TRIGGER:
+                {
+                    HTREEITEM next_item = select + (to_del_cnt + 1) ? select + (to_del_cnt + 1) : select;
+                    auto deleted_cnt = Scen.triggers->del_for_all(select_item->idx);
+                    assert(deleted_cnt == to_del_cnt);
+                    for (decltype(to_del_cnt) i = 0; i < to_del_cnt; ++i)
+                    {
+                        TreeView_DeleteItem(treeview, select + 1);
+                    }
+                    auto to_iter = select;
+                    while (++to_iter)
+                    {
+                        ((ItemData*)to_iter.lparam())->idx -= to_del_cnt;
+                    }
+                    TreeView_Select(treeview, next_item, TVGN_CARET);
+                    break;
+                }
+                case ItemData::CONDITION:
+                {
+                    break;
+                }
+                case ItemData::EFFECT:
+                {
+                    break;
+                }
+                default:
+                    break;
+                }
+                SetFocus(treeview);
+            }
+            break;
+        }
         case IDC_SORT:
         {
             Scen.triggers->sort_by_order();
@@ -648,6 +699,7 @@ BOOL MakeTrigDlg(HWND dialog)
     SendMessage(GetDlgItem(dialog, IDC_ADD_COND), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_NEW_COND)));
     SendMessage(GetDlgItem(dialog, IDC_DEL_TRIG), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_DEL_TRIG)));
     SendMessage(GetDlgItem(dialog, IDC_COPY_TO_ALL), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_COPY_TO_ALL)));
+    SendMessage(GetDlgItem(dialog, IDC_DEL_FOR_ALL), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_DEL_FOR_ALL)));
     SendMessage(GetDlgItem(dialog, IDC_SORT), BM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)LoadIcon(inst, MAKEINTRESOURCE(IDI_B_SORT)));
 
     //SendMessage(GetDlgItem(dialog, IDC_ADD_TRIG), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)icon_trig);
@@ -656,6 +708,7 @@ BOOL MakeTrigDlg(HWND dialog)
     CreateToolTip(IDC_ADD_EFFE, dialog, stMap[TIPS_ADD_EFFECT]);
     CreateToolTip(IDC_DEL_TRIG, dialog, stMap[TIPS_DEL_TREEITEM]);
     CreateToolTip(IDC_COPY_TO_ALL, dialog, stMap[TIPS_TRIGGER_COPY_TO_ALL]);
+    CreateToolTip(IDC_DEL_FOR_ALL, dialog, stMap[TIPS_TRIGGER_DEL_FOR_ALL]);
     CreateToolTip(IDC_SORT, dialog, stMap[TIPS_TRIGGER_SORT]);
 
     return TRUE;

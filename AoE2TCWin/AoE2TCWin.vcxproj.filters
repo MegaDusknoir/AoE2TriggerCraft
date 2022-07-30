@@ -148,6 +148,9 @@
     <Image Include="res\B_NEW_COND.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\B_DEL_FOR_ALL.ico">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\util\libdeflate\libdeflatestatic.lib">

@@ -208,6 +208,7 @@ xcopy .\string.json .\..\dist\ /y</Command>
   <ItemGroup>
     <Image Include="AoE2TCWin.ico" />
     <Image Include="res\B_COPY_TO_ALL.ico" />
+    <Image Include="res\B_DEL_FOR_ALL.ico" />
     <Image Include="res\B_DEL_TRIG.ico" />
     <Image Include="res\B_NEW_COND.ico" />
     <Image Include="res\B_NEW_EFFE.ico" />

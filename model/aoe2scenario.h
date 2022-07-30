@@ -115,6 +115,7 @@ namespace AoE2ScenarioNamespace
         void mov(TriggerStructIdx target, TriggerStructIdx idx_begin, TriggerStructIdx idx_end);
         //push_back to vector, move the order to target
         TriggerStructIdx copy_to_all(TriggerStructIdx to_copy, uint32_t mode);
+        TriggerStructIdx del_for_all(TriggerStructIdx to_del);
         void sort_by_order();
         void load();
         void confirm();

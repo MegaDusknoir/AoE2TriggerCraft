@@ -42,7 +42,9 @@
 #define IDD_UNITS                       131
 #define IDS_OPEN_TEXT_FAIL              131
 #define IDD_TRIGGERS                    132
+#define IDS_DEL_FOR_ALL_WARNING         132
 #define IDD_MAPVIEW                     133
+#define TIPS_TRIGGER_DEL_FOR_ALL        133
 #define IDB_COND                        134
 #define IDB_CONDITION                   134
 #define IDD_SCENINFO                    134
@@ -60,6 +62,7 @@
 #define IDI_B_SORT                      144
 #define IDI_B_NEW_EFFE                  146
 #define IDI_B_NEW_COND                  147
+#define IDI_B_DEL_FOR_ALL               149
 #define IDC_TRIGGER_TREE                1007
 #define IDC_ADD_TRIG                    1009
 #define IDC_DEL_TRIG                    1010
@@ -67,6 +70,7 @@
 #define IDC_SORT                        1012
 #define IDC_ADD_COND                    1013
 #define IDC_ADD_EFFE                    1014
+#define IDC_DEL_FOR_ALL                 1015
 #define IDC_EDIT4                       1051
 #define IDC_PT_DESC_STR                 1051
 #define IDC_EDIT5                       1052
@@ -119,7 +123,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        148
+#define _APS_NEXT_RESOURCE_VALUE        150
 #define _APS_NEXT_COMMAND_VALUE         32786
 #define _APS_NEXT_CONTROL_VALUE         1074
 #define _APS_NEXT_SYMED_VALUE           110

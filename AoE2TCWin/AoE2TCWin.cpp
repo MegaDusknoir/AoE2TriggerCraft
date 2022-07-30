@@ -341,6 +341,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringMap(hInstance, TIPS_TRIGGER_SORT, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_SORT_COMPLETE, stMap, MAX_LOADSTRING);
     LoadStringMap(hInstance, IDS_NAME_NEW_TRIGGER, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, TIPS_TRIGGER_DEL_FOR_ALL, stMap, MAX_LOADSTRING);
+    LoadStringMap(hInstance, IDS_DEL_FOR_ALL_WARNING, stMap, MAX_LOADSTRING);
     
     MyRegisterClass(hInstance);
 

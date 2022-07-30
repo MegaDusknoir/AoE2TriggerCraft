@@ -515,6 +515,12 @@ namespace AoE2ScenarioNamespace
         TriggerStructIdx added_cnt = list_by_order.size() - old_size;
         return added_cnt;
     }
+    TriggerStructIdx TriggerManager::del_for_all(TriggerStructIdx to_del)
+    {
+        TriggerStructIdx deleted_cnt = scen->header.player_count - 1;
+        del(to_del + 1, deleted_cnt);
+        return deleted_cnt;
+    }
 
     string TextIO::string_escape(const string& src)
     {
