@@ -413,24 +413,19 @@ namespace AoE2ScenarioNamespace
         {
             //sort to ensure the trigger which id is greater deleted first
             std::sort(list_deleted.begin(), list_deleted.end());
+            //the trigger id which effect called should be repointed.
+            for (size_t i = 0; i < list_by_order.size(); ++i)
+            {
+                trigger_repoint(id_list[i], list_deleted);
+            }
             while (!list_deleted.empty())
             {
                 for (auto& trig_idx : list_by_order)
                 {
-                    //deleted id call shall repoint to -1
-                    trigger_repoint(id_list[trig_idx], list_deleted.back(), -1);
                     //decrease the index which greater than deleted
                     if (trig_idx > list_deleted.back())
                     {
                         --trig_idx;
-                    }
-                }
-                //decrease called id which greater than deleted
-                for (auto i = list_deleted.back() + 1; i < list_by_order.size(); ++i)
-                {
-                    for (size_t j = 0; j < list_by_order.size(); ++j)
-                    {
-                        trigger_repoint(id_list[j], i, i - 1);
                     }
                 }
                 id_list.erase(id_list.begin() + list_deleted.back());
@@ -444,13 +439,32 @@ namespace AoE2ScenarioNamespace
         scen->body.Options.number_of_triggers = order_list.size();
         scen->body.Triggers.number_of_triggers = order_list.size();
     }
-    void TriggerManager::trigger_repoint(TriggerStruct& trig, uint32_t old_id, int32_t new_id)
+    void TriggerManager::trigger_repoint(TriggerStruct& trig, const vector<TriggerStructIdx>& list_deleted_sorted)
     {
         for (auto& effect : trig.effect_data)
         {
-            if (effect.trigger_id == old_id)
+            if (effect.trigger_id != -1)
             {
-                effect.trigger_id = new_id;
+                for (size_t i = 0; i <= list_deleted_sorted.size(); ++i)
+                {
+                    //decrease called id which greater than deleted
+                    if (i == list_deleted_sorted.size())
+                    {
+                        effect.trigger_id -= list_deleted_sorted.size();
+                        break;
+                    }
+                    if (effect.trigger_id < list_deleted_sorted[i])
+                    {
+                        effect.trigger_id -= i;
+                        break;
+                    }
+                    //deleted id call shall repoint to -1
+                    else if(effect.trigger_id == list_deleted_sorted[i])
+                    {
+                        effect.trigger_id = -1;
+                        break;
+                    }
+                }
             }
         }
     }

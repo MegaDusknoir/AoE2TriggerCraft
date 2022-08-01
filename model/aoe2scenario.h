@@ -120,7 +120,7 @@ namespace AoE2ScenarioNamespace
         void load();
         void confirm();
     private:
-        void trigger_repoint(TriggerStruct& trig, uint32_t old_id, int32_t new_id);
+        void trigger_repoint(TriggerStruct& trig, const vector<TriggerStructIdx>& list_deleted_sorted);
         void change_player(TriggerStruct& trig, int32_t base_player, int32_t player, uint32_t mode);
         void change_player_judge(int32_t base_player, int32_t player, uint32_t mode, int32_t& current_attr);
         void del(vector<TriggerStructIdx>::iterator to_del);
