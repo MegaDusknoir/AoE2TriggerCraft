@@ -1,5 +1,7 @@
 # Trigger Craft
 
+**this project is deprecated, see [Trigger Craft II](https://github.com/MegaDusknoir/AoE2TriggerCraft2) instead.**
+
 A Scenario GUI Editor in C++, for **Age of Empires 2 Definitive Edition**.
 
 [中文简体](README.zh_cn.md)
